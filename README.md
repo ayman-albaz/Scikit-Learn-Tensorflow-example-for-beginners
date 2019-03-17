@@ -1,5 +1,7 @@
 # Tensorflow-example-for-beginners
-This is a step by step guide on implementing a Tensorflow-keras model. This is made for those with minimal experience in Python, some understanding of machine learning theory, and minimal experience in writing machine learning algorithems in Python.
+This is a step by step guide on implementing a Tensorflow-keras model. This is made for those with minimal experience in Python, some understanding of machine learning theory, and minimal experience in writing machine learning algorithems in Python. 
+
+This tutorial assumes you have Tensorflow-GPU, Python (v3.6), and Ipython installed on your machine.
 
 
 
