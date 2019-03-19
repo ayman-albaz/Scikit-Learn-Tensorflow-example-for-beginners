@@ -1,5 +1,5 @@
 # Tensorflow-example-for-beginners
-This is a step by step guide on implementing a Tensorflow-keras model. This is made for those with minimal experience in Python, some understanding of machine learning theory, and minimal experience in writing machine learning algorithems in Python.
+This is a step by step guide on implementing a scikit learn & Tensorflow-keras model. This is made for those with minimal experience in Python, some understanding of machine learning theory, and minimal experience in writing machine learning algorithems in Python.
 
 I am making this tutorial to help non-python users in my lab group understand the very basic priniciples and algorithms behind machine learning and data analysis, however everyone is welcome to follow along and learn. 
 
@@ -64,7 +64,7 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
     
     You will see the spectroscopic image. Once you are done examining it close the window, now a line plot should appear, examine it then close it.
     
-    ![Alt text](/images/imshow.png?raw=true "Title")
+    ![Alt text](/images/imshow.png?raw=true "Title")![Alt text](/images/lineplot.png?raw=true "Title")
     
     <b>OPTIONAL:</b> Feel free to play around with ```plt.imshow(features[:,:,0])``` by changing the value of 0 to anything from 0 to 223 in order to get a better feel of the data.
  
