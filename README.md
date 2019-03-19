@@ -13,7 +13,7 @@ Go to http://lesun.weebly.com/hyperspectral-data-set.html, scroll to Indian Pine
 
 
 # Brief understanding of the data
-Whenever we are working with an unfamiliar dataset, it is best to examine it before writing down any code. From the website we have we can see that we are working with <b>hyperspectral data</b> collected from an [AVRIS sensor](https://aviris.jpl.nasa.gov/), which is basically a drone that uses [spectrometer](https://en.wikipedia.org/wiki/Spectroscopy) over a large area of land.
+Whenever we are working with an unfamiliar dataset, it is best to examine it before writing down any code. From the website we have we can see that we are working with <b>hyperspectral data</b> collected from an [AVRIS sensor](https://aviris.jpl.nasa.gov/), which is basically a drone that uses a [spectrometer](https://en.wikipedia.org/wiki/Spectroscopy) over a large area of land.
 
 The first file "Indian_pines_corrected.mat" will contain a 3D array of 145 by 145 pixels, each with 224 spectral points, meaning we have a 3D matrix or array that is 145x145x224.
 
@@ -65,6 +65,10 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
     You will see the spectroscopic image. Once you are done examining it close the window, now a line plot should appear, examine it then close it.
     
     ![Alt text](/images/imshow.png?raw=true "Title")![Alt text](/images/lineplot.png?raw=true "Title")
+    
+    Some important information we can get from the first image is that we are not working with a clean uniform image. There are also visible clusters of similarly coloured poylgons, which we can only assume to be a unique type of crop.
+    
+    Some important information we can get from the second image is how the Z-dimension (different spectra) change over the course of the image (please note: changes from pixel to pixel is discrete and not continuous like the line-plot implies), we are looking at only one line of pixels and not the entire image. We can look at the spectra over the whole image, however plotting a 3D graph is not only time confusing, but can be a complete waste of time if our data is dense (which it is in our case).
     
     <b>OPTIONAL:</b> Feel free to play around with ```plt.imshow(features[:,:,0])``` by changing the value of 0 to anything from 0 to 223 in order to get a better feel of the data.
  
