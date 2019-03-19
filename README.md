@@ -1,4 +1,4 @@
-# Tensorflow-example-for-beginners
+# Scikit learn & Tensorflow-example-for-beginners
 This is a step by step guide on implementing a scikit learn & Tensorflow-keras model. This is made for those with minimal experience in Python, some understanding of machine learning theory, and minimal experience in writing machine learning algorithems in Python.
 
 I am making this tutorial to help non-python users in my lab group understand the very basic priniciples and algorithms behind machine learning and data analysis, however everyone is welcome to follow along and learn. 
