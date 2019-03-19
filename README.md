@@ -3,7 +3,7 @@ This is a step by step guide on implementing a Tensorflow-keras model. This is m
 
 I am making this tutorial to help non-python users in my lab group understand the very basic priniciples and algorithms behind machine learning and data analysis, however everyone is welcome to follow along and learn. 
 
-This tutorial assumes you have Tensorflow-GPU, Python (v3.6), and iPython installed on your machine.
+This tutorial assumes you have Tensorflow-GPU, Python (v3.6), and iPython (Anaconda) installed on your machine.
 
 
 
@@ -34,11 +34,11 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
 
 
 # Deeper understanding of the data
-1. Open the folder "TF_Tutorial", Create a file in that folder called "tutorial.py". Hold the SHIFT key and RIGHT CLICK anywhere in the white space of the folder. LEFT CLICK on "Open PowerShell window here". TYPE ```ipython``` and hit ENTER. You should now have ipython open.
+1. Open the folder "TF_Tutorial", Create a file in that folder called "graphical_analysis.py". Hold the SHIFT key and RIGHT CLICK anywhere in the white space of the folder. LEFT CLICK on "Open PowerShell window here". TYPE ```ipython``` and hit ENTER. You should now have ipython open.
 
-2. Minimize iPython and edit the "tutorial.py" file using notepad, notepad++ or your favourite IDE.
+2. Minimize iPython and edit the "graphical_analysis.py" file using notepad, notepad++ or your favourite IDE.
 
-3. Type in the following in "tutorial.py":
+3. Type in the following in "graphical_analysis":
     ```python
     from scipy.io import loadmat
     import matplotlib.pyplot as plt
@@ -46,11 +46,10 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
     features= loadmat('Indian_pines_corrected.mat')['indian_pines_corrected']
     labels= loadmat('Indian_pines_gt.mat')['indian_pines_gt']
 
-    def data_plots():
-        plt.imshow(features[:,:,0])
-        plt.show()
-        plt.plot(features[0,:,:])
-        plt.show()
+    plt.imshow(features[:,:,0])
+    plt.show()
+    plt.plot(features[0,:,:])
+    plt.show()
     
     ``` 
     Since the datafiles we got are '.mat' files we need to use loadmat to open them. Also since 2D and 3D arrays can be hard to visualize in the mind we will use matplotlib to help visualize them. ```features``` are where the features will be stored, and ```labels``` are where the labels will be stored. 
@@ -61,9 +60,11 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
     
     ```plt.plot``` at the feature location will give us a line graph of all 224 spectral data points across the first row of pixels. This will give us a good idea of how the spectroscopy data changes as we move locations across the 145x145 map. 
     
-    Open iPython again and type in ```run tutorial.py``` and hit ENTER.
+    Open iPython again and type in ```run graphical_analysis.py``` and hit ENTER.
     
-    TYPE in ```data_plots()``` and hit ENTER. You will see the spectroscopic image. Once you are done examining it close the window, now a line plot should appear, examine it then close it.
+    You will see the spectroscopic image. Once you are done examining it close the window, now a line plot should appear, examine it then close it.
+    
+    ![Alt text](/images/imshow.png?raw=true "Title")
     
     <b>OPTIONAL:</b> Feel free to play around with ```plt.imshow(features[:,:,0])``` by changing the value of 0 to anything from 0 to 223 in order to get a better feel of the data.
  
