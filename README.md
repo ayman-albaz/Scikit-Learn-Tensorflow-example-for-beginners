@@ -42,11 +42,14 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
     ```python
     from scipy.io import loadmat
     import matplotlib.pyplot as plt
+    import numpy as np
 
     features= loadmat('Indian_pines_corrected.mat')['indian_pines_corrected']
     labels= loadmat('Indian_pines_gt.mat')['indian_pines_gt']
 
     plt.imshow(features[:,:,0])
+    plt.show()
+    plt.imshow(np.average(features,axis=2))
     plt.show()
     plt.plot(features[0,:,:])
     plt.show()
@@ -56,15 +59,17 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
     
     Notice how there is a weird double bracket [] after loading the file? This is because loadmat returns a dictionary with many different pieces of information, but we are only interested in the features and labels, so by using a [] we can get only the data we need.
     
-    ```plt.imshow``` at that feature location will give us idea of what image is made by one spectral data point (ex. looking at one page from our book example). 
+    ```plt.imshow(features[:,:,0])``` at that feature location will give us idea of what image is made by one spectral data point (ex. looking at one page from our book example).
     
-    ```plt.plot``` at the feature location will give us a line graph of all 224 spectral data points across the first row of pixels. This will give us a good idea of how the spectroscopy data changes as we move locations across the 145x145 map. 
+    ```plt.imshow(np.average(features,axis=2))``` will show us the AVRIS sensor image from the average of all the spectra. While taking the average of the spectra will never be done at any step of the machine learning process, it is cool to see what image you get.
+    
+    ```plt.plot(features[0,:,:])``` at the feature location will give us a line graph of all 224 spectral data points across the first row of pixels. This will give us a good idea of how the spectroscopy data changes as we move locations across the 145x145 map. 
     
     Open iPython again and type in ```run graphical_analysis.py``` and hit ENTER.
     
     You will see the spectroscopic image. Once you are done examining it close the window, now a line plot should appear, examine it then close it.
     
-    ![](/images/imshow.png?raw=true "Title")[](/images/lineplot.png?raw=true "Title")
+    ![](/images/imshow.png?raw=true "Title")[](/images/imshow2.png?raw=true "Title")[](/images/lineplot.png?raw=true "Title")
     
     Some important information we can get from the first image is that we are not working with a clean uniform image. There are also visible clusters of similarly coloured poylgons, which we can only assume to be a unique type of crop.
     
@@ -75,7 +80,7 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
     <b>OPTIONAL:</b> Feel free to play around with ```plt.plot(features[0,:,:])``` by changing the value of 0 to anything from 0 to 144 in order to get a better feel of the data.
     
     
-# Scikit Learn
+# Scikit Learn: Introduction
 [Scikit-learn is a free software machine learning library for the Python programming language.](https://scikit-learn.org/stable/) Scikit learn can be a little intimidating at first, but once you have an idea of what you should be doing its fairly easy. The most difficult part about Scikit-learn is choosing the right machine learning algorithems. Ideally one should understand all the math behind all of algorithems, however if you are a beginner you should refer to the diagram below.
 
 ![](/images/ml_map.png?raw=true "Title")
@@ -93,6 +98,8 @@ Lets start at the beginning
 4. We have <100k samples.
 
 5. It looks like we have to use [Linear SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html).
-* And we will also be using [K-Nearest-Neighbors](https://scikit-learn.org/stable/modules/neighbors.html) and [SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html)
+    * And we will also be using [K-Nearest-Neighbors](https://scikit-learn.org/stable/modules/neighbors.html) and [SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html)
     
 
+# Scikit Learn: Implementation
+There are 2 parts of a standard machine learning procedure. Training the data and testing the data. 
