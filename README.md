@@ -77,4 +77,22 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
     
 # Scikit Learn
 [Scikit-learn is a free software machine learning library for the Python programming language.](https://scikit-learn.org/stable/) Scikit learn can be a little intimidating at first, but once you have an idea of what you should be doing its fairly easy. The most difficult part about Scikit-learn is choosing the right machine learning algorithems. Ideally one should understand all the math behind all of algorithems, however if you are a beginner you should refer to the diagram below.
+
 ![](/images/ml_map.png?raw=true "Title")
+
+Lets start at the beginning
+1. At first it may seem like we have >50 samples since we have 140x140 pixels (19600 values), however we have to remember we are not working with binary data, but multi-categorial data. This means we could have 1 category 19500 values and the rest containing values smaller than 50. 
+    * Open iPython, TYPE ```np.unique(labels, return_counts=True)``` and hit ENTER. You should see an array of all categories in our labels array as well as the amount of time they should up in the entire array.
+    * Notice that the categories of 7 and 9 do not contain a value greater than 50.
+    * Usually we would want to use a big dataset when we do any kind of machine learning, but for the sake up this example we will continue on with our analysis.
+    
+2. We are predicting a category (type of crop).
+
+3. Our data is labeled (our labels array).
+
+4. We have <100k samples.
+
+5. It looks like we have to use [Linear SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html).
+* And we will also be using [K-Nearest-Neighbors](https://scikit-learn.org/stable/modules/neighbors.html) and [SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html)
+    
+
