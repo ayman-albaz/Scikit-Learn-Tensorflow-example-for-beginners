@@ -104,4 +104,46 @@ Lets start at the beginning
     
 
 # Scikit Learn: Implementation
-There are 2 parts of a standard machine learning procedure. Training the data and testing the data. 
+Create a new file called ```SKL.py``` in the same directory. Copy and past the following code inside the file and save:
+```python
+from scipy.io import loadmat
+from sklearn.neighbors import KNeighborsClassifier
+
+features= loadmat('Indian_pines_corrected.mat')['indian_pines_corrected']
+labels= loadmat('Indian_pines_gt.mat')['indian_pines_gt']
+
+"""NEW STUFF"""
+
+features=features.reshape((-1,features.shape[2]))   #Flattening the 145x145 array
+labels= labels.reshape(-1)
+
+def linear_svc(n=50):
+    from sklearn.svm import LinearSVC
+    lin_svc=LinearSVC()
+    
+    from sklearn.decomposition import PCA
+    pca=PCA(n_components=n)     #Default n=50
+    data=pca.fit_transform(features)
+    
+    from sklearn.model_selection import train_test_split
+    Data_train, Data_test, Labels_train, Labels_test = train_test_split(data, labels, test_size=0.33)
+    
+    line_svc.fit(Data_train, Labels_train)
+    print (line_svc.score(Data_test, Labels_test))
+    
+    
+def k_nn(k=19, n= 50):
+    from sklearn.neighbors import KNeighborsClassifier
+    knn = KNeighborsClassifier(n_neighbors=k)   #Default k=19
+    
+    from sklearn.decomposition import PCA
+    pca=PCA(n_components=n)     #Default n=10
+    data=pca.fit_transform(features)
+    
+    from sklearn.model_selection import train_test_split
+    Data_train, Data_test, Labels_train, Labels_test = train_test_split(data, labels, test_size=0.33)
+    
+    knn.fit(Data_train, Labels_train)
+    print (knn.score(Data_test, Labels_test))
+    ```
+So looking
