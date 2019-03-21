@@ -77,3 +77,4 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
     
 # Scikit Learn
 [Scikit-learn is a free software machine learning library for the Python programming language.](https://scikit-learn.org/stable/) Scikit learn can be a little intimidating at first, but once you have an idea of what you should be doing its fairly easy. The most difficult part about Scikit-learn is choosing the right machine learning algorithems. Ideally one should understand all the math behind all of algorithems, however if you are a beginner you should refer to the diagram below.
+![Alt text](/images/ml_map.png?raw=true "Title")![Alt text](/images/lineplot.png?raw=true "Title")
