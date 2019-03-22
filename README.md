@@ -100,7 +100,7 @@ Lets start at the beginning
 4. We have <100k samples.
 
 5. It looks like we have to use [Linear SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html).
-    * And we will also be using [K-Nearest-Neighbors](https://scikit-learn.org/stable/modules/neighbors.html) and [SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html)
+    * And we will also be using [K-Nearest-Neighbors](https://scikit-learn.org/stable/modules/neighbors.html)
     
 
 # Scikit Learn: Implementation
@@ -148,3 +148,33 @@ def k_nn(k=19, n= 50):
 ```
 
 This all looks confusing but we will go through it!
+
+
+```python 
+    features=features.reshape((-1,features.shape[2]))   #Flattening the 145x145 array
+    labels= labels.reshape(-1) 
+``` 
+* Whenever you are dealing with array in machine learning, you almost always have to flatten them. In our example we turned the features 3D array to a 2D array, and the lebels 2D array to a 1D array.
+
+
+```python
+def linear_svc(n=50):
+    from sklearn.svm import LinearSVC
+    lin_svc=LinearSVC()
+    
+    from sklearn.decomposition import PCA
+    pca=PCA(n_components=n)     #Default n=50
+    data=pca.fit_transform(features)
+    
+    from sklearn.model_selection import train_test_split
+    Data_train, Data_test, Labels_train, Labels_test = train_test_split(data, labels, test_size=0.33)
+    
+    line_svc.fit(Data_train, Labels_train)
+    print (line_svc.score(Data_test, Labels_test))
+```
+* This is a linear svc algorithm that we talked about earlier. 
+* In the first chunck of this code we import the our LinearScv model.
+* In the second chunk of this code, we preform a [Principal component analysis (PCA), which is a statistical procedure that uses an orthogonal transformation to convert a set of observations of possibly correlated variables (entities each of which takes on various numerical values) into a set of values of linearly uncorrelated variables called principal components.](https://en.wikipedia.org/wiki/Principal_component_analysis)
+    * Basically PCA just checks to see if the variable we are measuring is correlated with the labels, if there are is no correlation, then it is removed from the dataset. Remember how I said earlier that there were spectra lines across our graphs that do not seem to move across our map? PCA removes those.   
+* In the third chunk of this code, we use '''train_test_split''' which takes our features and labels them and splits them in to 2 parts, one part will be used to train the machine learning algorithm, the other will be used to test against to see just how good our algorithm is. Now for the 2 main parts of any machine learning algorithm, training and testing.
+* In the last chunk of this code, we fit the training data to our linear_SVC model. We then measure its accuracy by using ```.score``` on the testing data.
