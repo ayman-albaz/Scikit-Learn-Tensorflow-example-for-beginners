@@ -100,7 +100,7 @@ Lets start at the beginning
 4. We have <100k samples.
 
 5. It looks like we have to use [Linear Support Vector Classification (SVC)](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html).
-    * And we will also be using [K-Nearest-Neighbors](https://scikit-learn.org/stable/modules/neighbors.html)
+    * And we will also be using [K-Nearest-Neighbors (KNN)](https://scikit-learn.org/stable/modules/neighbors.html)
 
 
 # Scikit Learn: Theory
@@ -116,6 +116,8 @@ It works by generating a line that that will be used to classify the data points
 
 
 ### The second algorithm we will be implementing is K-nearest-neighbors.
+KNN is fairly straight foreward, it classifies a new data point by looking at the 'K' closest existing labelled data points. 'K' can be set to any value of your choice. So if you choose a value of 3, the new data point will look at the nearest 3 existing labelled data points. This new datapoint will then be classified with the same label as the most common label of those 3 existing labelled data points.
+![](/images/KNN_guide.png?raw=true "Title")
 
 # Scikit Learn: Implementation
 Create a new file called ```SKL.py``` in the same directory. Copy and past the following code inside the file and save:
