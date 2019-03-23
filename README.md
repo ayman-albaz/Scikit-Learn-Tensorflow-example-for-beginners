@@ -201,6 +201,7 @@ print(f'Features used {len(pca.components_)}/{features.shape[1]}')
 * n_components='mle', svd_solver='full' just mean the computer will just figure out which features out of the 200 are worth having for our calculations. Remember how some lines in the graph don't move throughout the figure? Those will probably be removed out.
 * Most of the time when you are working with big data you want to manually choose the amount of features you have, but since our data is relatively small, we can use an automatic PCA even if it will give us some features that add little to the accuracy.
 
+
 ```python
 def linear_svc():
     """This is the linear support vector classification algorithm. We declare the algorithm, train+split, fit, predict."""
@@ -211,9 +212,24 @@ def linear_svc():
     Data_train, Data_test, Labels_train, Labels_test = train_test_split(data, labels, test_size=0.33)
     
     lin_svc.fit(Data_train, Labels_train)
-    print (lin_svc.score(Data_test, Labels_test))
+    print (f'Accuracy: {lin_svc.score(Data_test, Labels_test)}')
 ```
 * This is a linear svc algorithm that we talked about earlier. 
 * In the first chunck of this code we import the our LinearScv model. 
 * In the second chunk of this code, we use ```train_test_split``` which takes our features and labels them and splits them in to 2 parts, one part will be used to train the machine learning algorithm, the other will be used to test against to see just how good our algorithm is. Now for the 2 main parts of any machine learning algorithm, training and testing.
 * In the third chunk of this code, we fit the training data to our linear_SVC model. We then measure its accuracy by using ```.score``` on the testing data.
+
+
+```python
+def k_nn():
+    """This is the k-nearest-neighbors classification algorithm. We declare the algorithm (with k=19), train+split, fit, predict."""
+    from sklearn.neighbors import KNeighborsClassifier
+    knn = KNeighborsClassifier(n_neighbors=19)
+    
+    from sklearn.model_selection import train_test_split
+    Data_train, Data_test, Labels_train, Labels_test = train_test_split(data, labels, test_size=0.33)
+    
+    knn.fit(Data_train, Labels_train)
+    print (f'Accuracy: {knn.score(Data_test, Labels_test)}')
+```
+This is the exact same implementation as linear_SVC, but instead we are using k-nearest-neighbors and sitting the value of k to 19.
