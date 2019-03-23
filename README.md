@@ -15,7 +15,7 @@ Go to http://lesun.weebly.com/hyperspectral-data-set.html, scroll to Indian Pine
 # Brief understanding of the data
 Whenever we are working with an unfamiliar dataset, it is best to examine it before writing down any code. From the website we have we can see that we are working with <b>hyperspectral data</b> collected from an [AVRIS sensor](https://aviris.jpl.nasa.gov/), which is basically a drone that uses a [spectrometer](https://en.wikipedia.org/wiki/Spectroscopy) over a large area of land.
 
-The first file "Indian_pines_corrected.mat" will contain a 3D array of 145 by 145 pixels, each with 224 spectral points, meaning we have a 3D matrix or array that is 145x145x224.
+The first file "Indian_pines_corrected.mat" will contain a 3D array of 145 by 145 pixels, each with 200 spectral points, meaning we have a 3D matrix or array that is 145x145x200.
 
 The second file "Indian_pines_gt.mat" will contain a 2D array of 145 by 145 pixels, with each pixel containing a value from the groundtruth table from the [website](http://lesun.weebly.com/hyperspectral-data-set.html). So for example an array containing five 4's in a row [4,4,4,4,4], will have 5 corn pixels in a row.
 
@@ -23,9 +23,9 @@ So just from looking at the website we can tell that the first file are our feat
 
 
 # Just what IS an array? Here's a good example!
-Imagine having one of those childrens books, except this book is 145mm by 145mm and is completely blank. This book also has 224 pages. You bring a bottle of really strong black ink and spill some of it on the first page of the book. You wipe of the ink but notice that your book is covered in ink. You also notice that the ink made its way though 223 papers, and did not make it to the last page. 
+Imagine having one of those childrens books, except this book is 145mm by 145mm and is completely blank. This book also has 200 pages. You bring a bottle of really strong black ink and spill some of it on the first page of the book. You wipe of the ink but notice that your book is covered in ink. You also notice that the ink made its way though 199 papers, and did not make it to the last page. 
 
-Now if you think of the book as an array (145 height, 145 width, 224 pages), and the darkness of the ink ranging from values of 0 (white) to 1 (black). The first page of the ink will have 145x145 pixels that all have the value of 1.
+Now if you think of the book as an array (145 height, 145 width, 200 pages), and the darkness of the ink ranging from values of 0 (white) to 1 (black). The first page of the ink will have 145x145 pixels that all have the value of 1.
 
 As you keep turning the pages you notice the values of the 145x145 pixels decreasing, making their way from 1 to 0.
 
@@ -63,7 +63,7 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
     
     ```plt.imshow(np.average(features,axis=2))``` will show us the AVRIS sensor image from the average of all the spectra. While taking the average of the spectra will never be done at any step of the machine learning process, it is cool to see what image you get.
     
-    ```plt.plot(features[0,:,:])``` at the feature location will give us a line graph of all 224 spectral data points across the first row of pixels. This will give us a good idea of how the spectroscopy data changes as we move locations across the 145x145 map. 
+    ```plt.plot(features[0,:,:])``` at the feature location will give us a line graph of all 200 spectral data points across the first row of pixels. This will give us a good idea of how the spectroscopy data changes as we move locations across the 145x145 map. 
     
     Open iPython again and type in ```run graphical_analysis.py``` and hit ENTER.
     
@@ -77,7 +77,7 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
     
     Some important information we can get from the third image is how the Z-dimension (different spectra) change over the course of the image (please note: changes from pixel to pixel is discrete and not continuous like the line-plot implies, also note we are looking at only one line of pixels and not the entire image). Notice how there are some spectra lines that do not change over the course of the image? **This fact will be important later on in the machine learning process (so keep that in mind).** We can look at the spectra over the whole image, however plotting a 3D graph is not only time confusing, but can be a complete waste of time if our data is dense (which it is in our case).
     
-    <b>OPTIONAL:</b> Feel free to play around with ```plt.imshow(features[:,:,0])``` by changing the value of 0 to anything from 0 to 223 in order to get a better feel of the data.
+    <b>OPTIONAL:</b> Feel free to play around with ```plt.imshow(features[:,:,0])``` by changing the value of 0 to anything from 0 to 199 in order to get a better feel of the data.
  
     <b>OPTIONAL:</b> Feel free to play around with ```plt.plot(features[0,:,:])``` by changing the value of 0 to anything from 0 to 144 in order to get a better feel of the data.
     
@@ -125,74 +125,95 @@ KNN is fairly straight foreward, it classifies a new data point by looking at th
 Create a new file called ```SKL.py``` in the same directory. Copy and past the following code inside the file and save:
 ```python
 from scipy.io import loadmat
-from sklearn.neighbors import KNeighborsClassifier
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import normalize
 
+
+"""Loading our features and labels from the matlab file"""
 features= loadmat('Indian_pines_corrected.mat')['indian_pines_corrected']
 labels= loadmat('Indian_pines_gt.mat')['indian_pines_gt']
 
-"""NEW STUFF"""
-
-features=features.reshape((-1,features.shape[2]))   #Flattening the 145x145 array
+"""Flattening of the 145x145x200 features array to a 2D 21025x200 array. Flattening of 145x145 labels array to a 1D 21025 array."""
+features=features.reshape((-1,features.shape[2]))   
 labels= labels.reshape(-1)
 
-def linear_svc(n=50):
+"""Normalizing data. This will save us alot of processing time"""
+features=normalize(features)
+
+"""PCA to reduce the amount of necessary features (200 spectroscopic features). PCA is set to do it automatically."""
+pca=PCA(n_components='mle', svd_solver='full')
+data=pca.fit_transform(features)
+print(f'Features used {len(pca.components_)}/{features.shape[1]}')
+
+
+def linear_svc():
+    """This is the linear support vector classification algorithm. We declare the algorithm, train+split, fit, predict."""
     from sklearn.svm import LinearSVC
     lin_svc=LinearSVC()
-    
-    from sklearn.decomposition import PCA
-    pca=PCA(n_components=n)     #Default n=50
-    data=pca.fit_transform(features)
     
     from sklearn.model_selection import train_test_split
     Data_train, Data_test, Labels_train, Labels_test = train_test_split(data, labels, test_size=0.33)
     
-    line_svc.fit(Data_train, Labels_train)
-    print (line_svc.score(Data_test, Labels_test))
+    lin_svc.fit(Data_train, Labels_train)
+    print (lin_svc.score(Data_test, Labels_test))
     
     
-def k_nn(k=19, n= 50):
+def k_nn():
+    """This is the k-nearest-neighbors classification algorithm. We declare the algorithm (with k=19), train+split, fit, predict."""
     from sklearn.neighbors import KNeighborsClassifier
-    knn = KNeighborsClassifier(n_neighbors=k)   #Default k=19
-    
-    from sklearn.decomposition import PCA
-    pca=PCA(n_components=n)     #Default n=10
-    data=pca.fit_transform(features)
+    knn = KNeighborsClassifier(n_neighbors=19)
     
     from sklearn.model_selection import train_test_split
     Data_train, Data_test, Labels_train, Labels_test = train_test_split(data, labels, test_size=0.33)
     
     knn.fit(Data_train, Labels_train)
-    print (knn.score(Data_test, Labels_test))
+    print (f'Accuracy: {knn.score(Data_test, Labels_test)}')
 ```
 
 This all looks confusing but we will go through it!
 
-
+# Scikit Learn: Implementation Explanation
 ```python 
-    features=features.reshape((-1,features.shape[2]))   #Flattening the 145x145 array
-    labels= labels.reshape(-1) 
+"""Flattening of the 145x145x200 features array to a 2D 21025x200 array. Flattening of 145x145 labels array to a 1D 21025 array."""
+features=features.reshape((-1,features.shape[2]))   
+labels= labels.reshape(-1)
 ``` 
 * Whenever you are dealing with array in machine learning, you almost always have to flatten them. In our example we turned the features 3D array to a 2D array, and the lebels 2D array to a 1D array.
 
 
 ```python
-def linear_svc(n=50):
+"""Normalizing data. This will save us alot of processing time"""
+features=normalize(features)
+```
+* The spectra features have values that are in the thousands so an example 3x3 spectra array would look something like this: [[4000, 6000, 8000], [2000, 3000, 4000], [3333, 3333, 3333]]. Normalization takes this array and well, normalizes the values to look something like this: [[0.37139068, 0.55708601, 0.74278135], [0.37139068, 0.55708601, 0.74278135], [0.57735027, 0.57735027, 0.57735027]]
+    * We can see normalization reduces the values of each array to be in between 0 to 1, while keeping their relative proportions (for each row of the array) to be the same.
+    * This is important because when we reduce the size of numbers we can increase the speed of the algorithms.
+    * This not decrease the accuracy of the algorithm because the the relative proportion is still the same between points.
+    
+    
+```python
+"""PCA to reduce the amount of necessary features (200 spectroscopic features). PCA is set to do it automatically."""
+pca=PCA(n_components='mle', svd_solver='full')
+data=pca.fit_transform(features)
+print(f'Features used {len(pca.components_)}/{features.shape[1]}')
+```
+* [Principal component analysis (PCA), which is a statistical procedure that uses an orthogonal transformation to convert a set of observations of possibly correlated variables (entities each of which takes on various numerical values) into a set of values of linearly uncorrelated variables called principal components.](https://en.wikipedia.org/wiki/Principal_component_analysis)
+* n_components='mle', svd_solver='full' just mean the computer will just figure out which features out of the 200 are worth having for our calculations. Remember how some lines in the graph don't move throughout the figure? Those will probably be removed out.
+* Most of the time when you are working with big data you want to manually choose the amount of features you have, but since our data is relatively small, we can use an automatic PCA even if it will give us some features that add little to the accuracy.
+
+```python
+def linear_svc():
+    """This is the linear support vector classification algorithm. We declare the algorithm, train+split, fit, predict."""
     from sklearn.svm import LinearSVC
     lin_svc=LinearSVC()
-    
-    from sklearn.decomposition import PCA
-    pca=PCA(n_components=n)     #Default n=50
-    data=pca.fit_transform(features)
     
     from sklearn.model_selection import train_test_split
     Data_train, Data_test, Labels_train, Labels_test = train_test_split(data, labels, test_size=0.33)
     
-    line_svc.fit(Data_train, Labels_train)
-    print (line_svc.score(Data_test, Labels_test))
+    lin_svc.fit(Data_train, Labels_train)
+    print (lin_svc.score(Data_test, Labels_test))
 ```
 * This is a linear svc algorithm that we talked about earlier. 
-* In the first chunck of this code we import the our LinearScv model.
-* In the second chunk of this code, we preform a [Principal component analysis (PCA), which is a statistical procedure that uses an orthogonal transformation to convert a set of observations of possibly correlated variables (entities each of which takes on various numerical values) into a set of values of linearly uncorrelated variables called principal components.](https://en.wikipedia.org/wiki/Principal_component_analysis)
-    * Basically PCA just checks to see if the variable we are measuring is correlated with the labels, if there are is no correlation, then it is removed from the dataset. Remember how I said earlier that there were spectra lines across our graphs that do not seem to move across our map? PCA removes those.   
-* In the third chunk of this code, we use '''train_test_split''' which takes our features and labels them and splits them in to 2 parts, one part will be used to train the machine learning algorithm, the other will be used to test against to see just how good our algorithm is. Now for the 2 main parts of any machine learning algorithm, training and testing.
-* In the last chunk of this code, we fit the training data to our linear_SVC model. We then measure its accuracy by using ```.score``` on the testing data.
+* In the first chunck of this code we import the our LinearScv model. 
+* In the second chunk of this code, we use ```train_test_split``` which takes our features and labels them and splits them in to 2 parts, one part will be used to train the machine learning algorithm, the other will be used to test against to see just how good our algorithm is. Now for the 2 main parts of any machine learning algorithm, training and testing.
+* In the third chunk of this code, we fit the training data to our linear_SVC model. We then measure its accuracy by using ```.score``` on the testing data.
