@@ -75,7 +75,7 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
     
     Some important information we can get from the first image is that we are not working with a clean uniform image. There are also visible clusters of similarly coloured poylgons, which we can only assume to be a unique type of crop.
     
-    Some important information we can get from the third image is how the Z-dimension (different spectra) change over the course of the image (please note: changes from pixel to pixel is discrete and not continuous like the line-plot implies), we are looking at only one line of pixels and not the entire image. Notice how there are some spectra lines that do not change over the course of the image? **This fact will be important later on in the machine learning process (so keep that in mind).** We can look at the spectra over the whole image, however plotting a 3D graph is not only time confusing, but can be a complete waste of time if our data is dense (which it is in our case).
+    Some important information we can get from the third image is how the Z-dimension (different spectra) change over the course of the image (please note: changes from pixel to pixel is discrete and not continuous like the line-plot implies, also note we are looking at only one line of pixels and not the entire image). Notice how there are some spectra lines that do not change over the course of the image? **This fact will be important later on in the machine learning process (so keep that in mind).** We can look at the spectra over the whole image, however plotting a 3D graph is not only time confusing, but can be a complete waste of time if our data is dense (which it is in our case).
     
     <b>OPTIONAL:</b> Feel free to play around with ```plt.imshow(features[:,:,0])``` by changing the value of 0 to anything from 0 to 223 in order to get a better feel of the data.
  
@@ -83,7 +83,7 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
     
     
 # Scikit Learn: Introduction
-[Scikit-learn is a free software machine learning library for the Python programming language.](https://scikit-learn.org/stable/) Scikit learn can be a little intimidating at first, but once you have an idea of what you should be doing its fairly easy. The most difficult part about Scikit-learn is choosing the right machine learning algorithems. Ideally one should understand all the math behind all of algorithems, however if you are a beginner you should refer to the diagram below.
+[Scikit-learn is a free software machine learning library for the Python programming language.](https://scikit-learn.org/stable/) Scikit learn can be a little intimidating at first, but once you have an idea of what you should be doing its fairly easy. The most difficult part about Scikit-learn is choosing the right machine learning algorithms. Ideally one should understand all the math behind all of algorithms, however if you are a beginner you should refer to the diagram below.
 
 ![](/images/ml_map.png?raw=true "Title")
 
@@ -101,8 +101,15 @@ Lets start at the beginning
 
 5. It looks like we have to use [Linear SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html).
     * And we will also be using [K-Nearest-Neighbors](https://scikit-learn.org/stable/modules/neighbors.html)
-    
 
+
+# Scikit Learn: Theory
+Any machine learning implementation will involve the following steps.
+1. Data preperation (This often the longest step in a real-world machine learning problem)
+2. Training and testing data w/ a machine learning algorithm
+3. Predicting new data
+
+The first algorithm we will be implementing is Linear-SCV
 # Scikit Learn: Implementation
 Create a new file called ```SKL.py``` in the same directory. Copy and past the following code inside the file and save:
 ```python
