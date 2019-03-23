@@ -112,11 +112,13 @@ Any machine learning implementation will involve the following steps.
 
 ### The first algorithm we will be implementing is Linear-SVC. 
 It works by generating a line that that will be used to classify the data points based on where they are relative to the line. For example, in our diagram below the Linear-SVC implementation is a bad one because both types of labels are on the same side of the line. If you were to use such implementation you would expect a score of around 0.50 (which is the worst case scenario). The implementation on the right is the best one because each label is located on different sides of the line. This implementation would give us an accuracy of around 1. Please note that in the real world and in our example, you will almost never have an accuracy of 1. This can often be attributed to measurement error or outliers.
+
 ![](/images/Linear_SCV_guide.png?raw=true "Title")
 
 
 ### The second algorithm we will be implementing is K-nearest-neighbors.
 KNN is fairly straight foreward, it classifies a new data point by looking at the 'K' closest existing labelled data points. 'K' can be set to any value of your choice. So if you choose a value of 3, the new data point will look at the nearest 3 existing labelled data points. This new datapoint will then be classified with the same label as the most common label of those 3 existing labelled data points.
+
 ![](/images/KNN_guide.png?raw=true "Title")
 
 # Scikit Learn: Implementation
