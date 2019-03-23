@@ -232,4 +232,4 @@ def k_nn():
     knn.fit(Data_train, Labels_train)
     print (f'Accuracy: {knn.score(Data_test, Labels_test)}')
 ```
-This is the exact same implementation as linear_SVC, but instead we are using k-nearest-neighbors and sitting the value of k to 19.
+* This is the exact same implementation as linear_SVC, but instead we are using k-nearest-neighbors and sitting the value of k to 19.
