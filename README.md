@@ -185,8 +185,15 @@ labels= labels.reshape(-1)
 """Normalizing data. This will save us alot of processing time"""
 features=normalize(features)
 ```
-* The spectra features have values that are in the thousands so an example 3x3 spectra array would look something like this: [[4000, 6000, 8000], [2000, 3000, 4000], [3333, 3333, 3333]]. Normalization takes this array and well, normalizes the values to look something like this: [[0.37139068, 0.55708601, 0.74278135], [0.37139068, 0.55708601, 0.74278135], [0.57735027, 0.57735027, 0.57735027]]
-    * We can see normalization reduces the values of each array to be in between 0 to 1, while keeping their relative proportions (for each row of the array) to be the same.
+* The spectra features have values that are in the thousands so an example 3x3 spectra array would look something like this: 
+    [[4000, 6000, 8000], 
+    [2000, 3000, 4000], 
+    [3333, 3333, 3333]]. 
+* Normalization takes this array and well, normalizes the values to look something like this: 
+    [[0.37139068, 0.55708601, 0.74278135], 
+    [0.37139068, 0.55708601, 0.74278135], 
+    [0.57735027, 0.57735027, 0.57735027]].
+    * We can see [normalization](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.normalize.html) reduces the values of each array to be in between 0 to 1, while keeping their relative proportions (for each row of the array) to be the same.
     * This is important because when we reduce the size of numbers we can increase the speed of the algorithms.
     * This not decrease the accuracy of the algorithm because the the relative proportion is still the same between points.
     
@@ -233,3 +240,24 @@ def k_nn():
     print (f'Accuracy: {knn.score(Data_test, Labels_test)}')
 ```
 * This is the exact same implementation as linear_SVC, but instead we are using k-nearest-neighbors and sitting the value of k to 19.
+
+Please note that the original spectra data had 224 features (different spectra) but we downloaded the corrected file which reduced the number of features to 200, which is why the PCA won't remove much features in this example.
+
+
+# Scikit Learn: Prediction
+* Go back to iPython, TYPE ```run SKL.py``` and hit ENTER.
+* After 5 seconds you should see the message ```Features used 198/200```
+    * Since we downloaded the corrected file which removed unnecessary, PCA only managed to remove 2 spectras.
+* TYPE ```linear_SVC()``` and hit ENTER
+    * The accuracy should pop up for linear_SVC
+* TYPE ```linear_SVC()``` and hit ENTER again!
+    * Notice how we have a different value for accuracy this time?
+        * This is because we are training and testing on different data everytime we enter the function (test_size=0.33)
+* TYPE ```k_nn()``` and hit ENTER
+    * The accuracy should pop up for k_nn
+* Which algorithm gives the best accuracy?
+* The k_nn algorithm is clearly superior for this example with an average accuracy of around 0.73, compared to linear_SCV which gives an average accuracy of 0.60.
+
+
+# Scikit Learn: Prediction
+* We now have our models set and ready to use, but is there a way to make them even better? We can try to optimize them by adding in paramters when we call our algorithm method. This topic is a bit to complicated for this tutorial but if you would like to try to play around with the idea read the documentation of [linear SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html) and [knn](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html).
