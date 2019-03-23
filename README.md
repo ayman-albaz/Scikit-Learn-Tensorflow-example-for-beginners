@@ -1,7 +1,7 @@
 # Scikit Learn & Tensorflow-example-for-beginners
-This is a step by step guide on implementing a scikit learn & Tensorflow-keras model. This is made for those with minimal experience in Python, some understanding of machine learning theory, and minimal experience in writing machine learning algorithems in Python.
+This is a step by step guide on implementing a Scikit Learn & Tensorflow-keras model. This is made for those with minimal experience in Python, some understanding of machine learning theory, and minimal experience in writing machine learning algorithms in Python.
 
-I am making this tutorial to help non-python users in my lab group understand the very basic priniciples and algorithms behind machine learning and data analysis, however everyone is welcome to follow along and learn. 
+I am making this tutorial to help non-python users in my lab group understand the very basic principles and algorithms behind machine learning and data analysis, however everyone is welcome to follow along and learn. 
 
 This tutorial assumes you have Tensorflow-GPU, Python (v3.6), and iPython (Anaconda) installed on your machine.
 
@@ -23,7 +23,7 @@ So just from looking at the website we can tell that the first file are our feat
 
 
 # Just what IS an array? Here's a good example!
-Imagine having one of those childrens books, except this book is 145mm by 145mm and is completely blank. This book also has 200 pages. You bring a bottle of really strong black ink and spill some of it on the first page of the book. You wipe of the ink but notice that your book is covered in ink. You also notice that the ink made its way though 199 papers, and did not make it to the last page. 
+Imagine having one of those children’s books, except this book is 145mm by 145mm and is completely blank. This book also has 200 pages. You bring a bottle of really strong black ink and spill some of it on the first page of the book. You wipe of the ink but notice that your book is covered in ink. You also notice that the ink made its way though 199 papers and did not make it to the last page. 
 
 Now if you think of the book as an array (145 height, 145 width, 200 pages), and the darkness of the ink ranging from values of 0 (white) to 1 (black). The first page of the ink will have 145x145 pixels that all have the value of 1.
 
@@ -44,20 +44,22 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
     import matplotlib.pyplot as plt
     import numpy as np
 
+    """Loading our features and labels from the matlab file"""
     features= loadmat('Indian_pines_corrected.mat')['indian_pines_corrected']
     labels= loadmat('Indian_pines_gt.mat')['indian_pines_gt']
 
-    plt.imshow(features[:,:,0])
+    """Graphical analysis"""
+    plt.imshow(features[:,:,0]) #145x145 image of a single spectra
     plt.show()
-    plt.imshow(np.average(features,axis=2))
+    plt.imshow(np.average(features,axis=2)) #145x145 image of the average of all (200) spectra
     plt.show()
-    plt.plot(features[0,:,:])
+    plt.plot(features[0,:,:]) #200 spectra distribution along the first 145 pixels
     plt.show()
-    
     ``` 
-    Since the datafiles we got are '.mat' files we need to use loadmat to open them. Also since 2D and 3D arrays can be hard to visualize in the mind we will use matplotlib to help visualize them. ```features``` are where the features will be stored, and ```labels``` are where the labels will be stored. 
     
-    Notice how there is a weird double bracket [] after loading the file? This is because loadmat returns a dictionary with many different pieces of information, but we are only interested in the features and labels, so by using a [] we can get only the data we need.
+    Since the datafiles we got are '.mat' files we need to use ```loadmat``` to open them. Also, since 2D and 3D arrays can be hard to visualize in the mind we will use matplotlib to help visualize them. ```features``` are where the features will be stored, and ```labels``` are where the labels will be stored. 
+    
+    Notice how there is a weird double bracket [] after loading the file? This is because ```loadmat``` returns a dictionary with many different pieces of information, but we are only interested in the features and labels, so by using a [] we can get only the data we need.
     
     ```plt.imshow(features[:,:,0])``` at that feature location will give us idea of what image is made by one spectral data point (ex. looking at one page from our book example).
     
@@ -73,13 +75,13 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
     ![](/images/imshow2.png?raw=true "Title")
     ![](/images/lineplot.png?raw=true "Title")
     
-    Some important information we can get from the first image is that we are not working with a clean uniform image. There are also visible clusters of similarly coloured poylgons, which we can only assume to be a unique type of crop.
+    Some important information we can get from the first image is that we are not working with a clean uniform image. There are also visible clusters of similarly coloured polygons, which we can only assume to be a unique type of crop.
     
     Some important information we can get from the third image is how the Z-dimension (different spectra) change over the course of the image (please note: changes from pixel to pixel is discrete and not continuous like the line-plot implies, also note we are looking at only one line of pixels and not the entire image). Notice how there are some spectra lines that do not change over the course of the image? **This fact will be important later on in the machine learning process (so keep that in mind).** We can look at the spectra over the whole image, however plotting a 3D graph is not only time confusing, but can be a complete waste of time if our data is dense (which it is in our case).
     
-    <b>OPTIONAL:</b> Feel free to play around with ```plt.imshow(features[:,:,0])``` by changing the value of 0 to anything from 0 to 199 in order to get a better feel of the data.
+    **OPTIONAL:** Feel free to play around with ```plt.imshow(features[:,:,0])``` by changing the value of 0 to anything from 0 to 199 in order to get a better feel of the data.
  
-    <b>OPTIONAL:</b> Feel free to play around with ```plt.plot(features[0,:,:])``` by changing the value of 0 to anything from 0 to 144 in order to get a better feel of the data.
+    **OPTIONAL:** Feel free to play around with ```plt.plot(features[0,:,:])``` by changing the value of 0 to anything from 0 to 144 in order to get a better feel of the data.
     
     
 # Scikit Learn: Introduction
@@ -88,7 +90,7 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
 ![](/images/ml_map.png?raw=true "Title")
 
 Lets start at the beginning
-1. At first it may seem like we have >50 samples since we have 140x140 pixels (19600 values), however we have to remember we are not working with binary data, but multi-categorial data. This means we could have 1 category 19500 values and the rest containing values smaller than 50. 
+1. At first it may seem like we have >50 samples since we have 140x140 pixels (19600 values), however we have to remember we are not working with 2 categories of equal destruction, but multi-categorial data of different distribution. This means we could have 1 category with 19500 feature values and the rest containing feature values smaller than 50. 
     * Open iPython, TYPE ```np.unique(labels, return_counts=True)``` and hit ENTER. You should see an array of all categories in our labels array as well as the amount of time they should up in the entire array.
     * Notice that the categories of 7 and 9 do not contain a value greater than 50.
     * Usually we would want to use a big dataset when we do any kind of machine learning, but for the sake up this example we will continue on with our analysis.
@@ -105,19 +107,19 @@ Lets start at the beginning
 
 # Scikit Learn: Theory
 Any machine learning implementation will involve the following steps.
-1. Data preperation (This often the longest step in a real-world machine learning problem)
+1. Data preparation (This often the longest step in a real-world machine learning problem)
 2. Training and testing data w/ a machine learning algorithm
 3. Predicting new data
 
 
 ### The first algorithm we will be implementing is Linear-SVC. 
-It works by generating a line that that will be used to classify the data points based on where they are relative to the line. For example, in our diagram below the Linear-SVC implementation is a bad one because both types of labels are on the same side of the line. If you were to use such implementation you would expect a score of around 0.50 (which is the worst case scenario). The implementation on the right is the best one because each label is located on different sides of the line. This implementation would give us an accuracy of around 1. Please note that in the real world and in our example, you will almost never have an accuracy of 1. This can often be attributed to measurement error or outliers.
+It works by generating a line that that will be used to classify the data points based on where they are relative to the line. For example, in our diagram below the Linear-SVC implementation is a bad one because both types of labels are on the same side of the line. If you were to use such implementation you would expect a score of around 0.50 (which is the worst-case scenario). The implementation on the right is the best one because each label is located on different sides of the line. This implementation would give us an accuracy of around 1. Please note that in the real world and in our example, you will almost never have an accuracy of 1. This can often be attributed to measurement error or outliers.
 
 ![](/images/Linear_SCV_guide.png?raw=true "Title")
 
 
 ### The second algorithm we will be implementing is K-nearest-neighbors.
-KNN is fairly straight foreward, it classifies a new data point by looking at the 'K' closest existing labelled data points. 'K' can be set to any value of your choice. So if you choose a value of 3, the new data point will look at the nearest 3 existing labelled data points. This new datapoint will then be classified with the same label as the most common label of those 3 existing labelled data points. In the example below, the new point will be classified as blue, because of those 10 data points that are near it, the majority of them are blue.
+KNN is fairly straight foreword, it classifies a new data point by looking at the 'K' closest existing labelled data points. 'K' can be set to any value of your choice. So if you choose a value of 3, the new data point will look at the nearest 3 existing labelled data points. This new datapoint will then be classified with the same label as the most common label of those 3 existing labelled data points. In the example below, the new point will be classified as blue, because of those 10 data points that are near it, the majority of them are blue.
 
 ![](/images/KNN_guide.png?raw=true "Title")
 
@@ -140,7 +142,7 @@ labels= labels.reshape(-1)
 """Normalizing data. This will save us alot of processing time"""
 features=normalize(features)
 
-"""PCA to reduce the amount of necessary features (200 spectroscopic features). PCA is set to do it automatically."""
+"""PCA to reduce the number of necessary features (200 spectroscopic features). PCA is set to do it automatically."""
 pca=PCA(n_components='mle', svd_solver='full')
 data=pca.fit_transform(features)
 print(f'Features used {len(pca.components_)}/{features.shape[1]}')
@@ -170,7 +172,7 @@ def k_nn():
     print (f'Accuracy: {knn.score(Data_test, Labels_test)}')
 ```
 
-This all looks confusing but we will go through it!
+This all looks confusing, but we will go through it!
 
 # Scikit Learn: Implementation Explanation
 ```python 
@@ -178,11 +180,11 @@ This all looks confusing but we will go through it!
 features=features.reshape((-1,features.shape[2]))   
 labels= labels.reshape(-1)
 ``` 
-* Whenever you are dealing with array in machine learning, you almost always have to flatten them. In our example we turned the features 3D array to a 2D array, and the lebels 2D array to a 1D array.
+* Whenever you are dealing with array in machine learning, you almost always have to flatten them. In our example we turned the features 3D array to a 2D array, and the labels 2D array to a 1D array.
 
 
 ```python
-"""Normalizing data. This will save us alot of processing time"""
+"""Normalizing data. This will save us a lot of processing time"""
 features=normalize(features)
 ```
 * The spectra features have values that are in the thousands so an example 3x3 spectra array would look something like this: 
@@ -199,7 +201,7 @@ features=normalize(features)
     
     
 ```python
-"""PCA to reduce the amount of necessary features (200 spectroscopic features). PCA is set to do it automatically."""
+"""PCA to reduce the number of necessary features (200 spectroscopic features). PCA is set to do it automatically."""
 pca=PCA(n_components='mle', svd_solver='full')
 data=pca.fit_transform(features)
 print(f'Features used {len(pca.components_)}/{features.shape[1]}')
@@ -222,7 +224,7 @@ def linear_svc():
     print (f'Accuracy: {lin_svc.score(Data_test, Labels_test)}')
 ```
 * This is a linear svc algorithm that we talked about earlier. 
-* In the first chunck of this code we import the our LinearScv model. 
+* In the first chunk of this code we import the our LinearScv model. 
 * In the second chunk of this code, we use ```train_test_split``` which takes our features and labels them and splits them in to 2 parts, one part will be used to train the machine learning algorithm, the other will be used to test against to see just how good our algorithm is. Now for the 2 main parts of any machine learning algorithm, training and testing.
 * In the third chunk of this code, we fit the training data to our linear_SVC model. We then measure its accuracy by using ```.score``` on the testing data.
 
@@ -259,5 +261,5 @@ Please note that the original spectra data had 224 features (different spectra) 
 * The k_nn algorithm is clearly superior for this example with an average accuracy of around 0.73, compared to linear_SCV which gives an average accuracy of 0.60.
 
 
-# Scikit Learn: Prediction
-* We now have our models set and ready to use, but is there a way to make them even better? We can try to optimize them by adding in paramters when we call our algorithm method. This topic is a bit to complicated for this tutorial but if you would like to try to play around with the idea read the documentation of [linear SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html) and [knn](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html).
+# Scikit Learn: Optimization
+* We now have our models set and ready to use, but is there a way to make them even better? We can try to optimize them by adding in parameters when we call our algorithm method. Try playing around with the value of k in k_nn and see what you get. Optimization too much of a  complicated topic for this tutorial so we are going to end it there with Scikit-Learn. However if you would like to try to play around with the idea of optimization read the documentation of [linear SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html) and [knn](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html).
