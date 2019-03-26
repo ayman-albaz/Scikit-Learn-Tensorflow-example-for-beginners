@@ -21,6 +21,8 @@ The second file "Indian_pines_gt.mat" will contain a 2D array of 145 by 145 pixe
 
 So just from looking at the website we can tell that the first file are our features, and the second file are the labels. This means we are able to use machine learning/deep learning/Tensorflow/Keras to classify the AVRIS sensor spectral data to crop type.
 
+So our hypothesis is: We can use spectroscopic data from an AVRIS sensor to classify different types of crops.
+
 
 # Just what IS an array? Here's a good example!
 Imagine having one of those children’s books, except this book is 145mm by 145mm and is completely blank. This book also has 200 pages. You bring a bottle of really strong black ink and spill some of it on the first page of the book. You wipe of the ink but notice that your book is covered in ink. You also notice that the ink made its way though 199 papers and did not make it to the last page. 
@@ -53,6 +55,8 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
     plt.show()
     plt.imshow(np.average(features,axis=2)) #145x145 image of the average of all (200) spectra
     plt.show()
+    plt.imshow(labels) #Heatmap of different crops
+    plt.show()
     plt.plot(features[0,:,:]) #200 spectra distribution along the first 145 pixels
     plt.show()
     ``` 
@@ -65,6 +69,8 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
     
     ```plt.imshow(np.average(features,axis=2))``` will show us the AVRIS sensor image from the average of all the spectra. While taking the average of the spectra will never be done at any step of the machine learning process, it is cool to see what image you get.
     
+    ```plt.imshow(labels)``` will show us the image of all the crops. Colours that are the same indicate the same type of crop.
+    
     ```plt.plot(features[0,:,:])``` at the feature location will give us a line graph of all 200 spectral data points across the first row of pixels. This will give us a good idea of how the spectroscopy data changes as we move locations across the 145x145 map. 
     
     Open iPython again and type in ```run graphical_analysis.py``` and hit ENTER.
@@ -73,11 +79,14 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
     
     ![](/images/imshow.png?raw=true "Title")
     ![](/images/imshow2.png?raw=true "Title")
+    ![](/images/imshow3.png?raw=true "Title")
     ![](/images/lineplot.png?raw=true "Title")
     
     Some important information we can get from the first image is that we are not working with a clean uniform image. There are also visible clusters of similarly coloured polygons, which we can only assume to be a unique type of crop.
     
-    Some important information we can get from the third image is how the Z-dimension (different spectra) change over the course of the image (please note: changes from pixel to pixel is discrete and not continuous like the line-plot implies, also note we are looking at only one line of pixels and not the entire image). Notice how there are some spectra lines that do not change over the course of the image? **This fact will be important later on in the machine learning process (so keep that in mind).** We can look at the spectra over the whole image, however plotting a 3D graph is not only time confusing, but can be a complete waste of time if our data is dense (which it is in our case).
+    The first, second, and third image serve as a soft-visual-confirmation for our hypothesis. We can see that spectroscopic data (features) can generate an image similar to that of the actual farm land (labels).
+    
+    Some important information we can get from the fourth image is how the Z-dimension (different spectra) change over the course of the image (please note: changes from pixel to pixel is discrete and not continuous like the line-plot implies, also note we are looking at only one line of pixels and not the entire image). Notice how there are some spectra lines that do not change over the course of the image? **This fact will be important later on in the machine learning process (so keep that in mind).** We can look at the spectra over the whole image, however plotting a 3D graph is not only time confusing, but can be a complete waste of time if our data is dense (which it is in our case).
     
     **OPTIONAL:** Feel free to play around with ```plt.imshow(features[:,:,0])``` by changing the value of 0 to anything from 0 to 199 in order to get a better feel of the data.
  
@@ -123,10 +132,22 @@ KNN is fairly straight foreword, it classifies a new data point by looking at th
 
 ![](/images/KNN_guide.png?raw=true "Title")
 
+# Scikit Learn: RED FLAG
+Did you spot anything that seemed off with what I've said so far? We were about to do a really big mistake without even noticing. I've actually commited this mistake myself, and I only noticed this now, once I've finished the entire tutorial and was about to submit it to my PI. I've written all of my code for both scikit learn and Tensorflow with this big mistake in the background. This just shows how there are always ways to make your code better and mistake free, no matter how much experience and knowledge you think you may have. 
+
+What is the mistake? We are looking to classify *crops* using spectroscopic points. Yet half of your data is *not crops*... it's just non-crop landscape. Crops are uniform, background landscape is not. For those who are not familiar to spectroscopy, each chemical compound emits a different array of spectra, crops will have a homogenous distribution of the same compounds, while non-crops can differ drastically as they can be made from different types of organic and non-organic matter. This will mess around with the accuracy of algorithms! We need to remove all non-crop datapoints and labels from our dataset!
+
+As we've seen using ```np.unique(labels, return_counts=True)```, more than half our data is non-crop which is represented by the label 0.
+
+For those who are interested in how I figured this out, I noticed a high volatility in my algorithm scores. I thought about it and finally figured out that the only ranodm elements from the dataset are from non-crop datapoints. 
+
+I will highlight the fix code down below.
+
 # Scikit Learn: Implementation
 Create a new file called ```SKL.py``` in the same directory. Copy and past the following code inside the file and save:
 ```python
 from scipy.io import loadmat
+import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import normalize
 
@@ -138,6 +159,9 @@ labels= loadmat('Indian_pines_gt.mat')['indian_pines_gt']
 """Flattening of the 145x145x200 features array to a 2D 21025x200 array. Flattening of 145x145 labels array to a 1D 21025 array."""
 features=features.reshape((-1,features.shape[2]))   
 labels= labels.reshape(-1)
+
+"""Getting rid of all that non-crop data"""
+
 
 """Normalizing data. This will save us alot of processing time"""
 features=normalize(features)
