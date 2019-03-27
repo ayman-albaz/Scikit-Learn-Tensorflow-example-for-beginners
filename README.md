@@ -331,3 +331,15 @@ Just for fun, here is a comparison between the true farm data against the predic
 
 # Scikit Learn: Optimization
 We now have our models set and ready to use, but is there a way to make them even better? We can try to optimize them by adding in parameters when we call our algorithm method. Try playing around with the value of k in k_nn and see what you get. Optimization too much of a complicated topic for this tutorial so we are going to end it there with Scikit-Learn. However if you would like to try to play around with the idea of optimization read the documentation of [linear SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html) and [knn](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html).
+
+
+# Tensorflow: Theory
+Tensorflow uses neural networks which are a type of machine learning algorithm. I could spend a while explaining all of the theory behind how the algorithm works, but I think Youtube does a much better job. Here is a [short and brief video]("https://www.youtube.com/watch?v=rEDzUT3ymw4") and a [longer and detailed video]("https://www.youtube.com/watch?v=aircAruvnKk") video explaining the Tensorflow algorithm. Of the two, I recommend watching the longer video.
+
+In my opinion a reason to use Tensorflow against regular machine learning algorithms is that (generally speaking) neural networks take into account relationships between different features, while most machine learning algorithms just use the relationship between the features and the labels.
+
+Reasons to not to use neural networks (NN) in comparison to regular machine learning algorithms (MLA) include:
+* Harder to implement
+* Harder to optimize
+* Longer time to execute
+* Sometimes regular MLA outperform NN
