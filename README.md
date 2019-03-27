@@ -292,7 +292,7 @@ Please note that the original spectra data had 224 features (different spectra) 
 * The knn algorithm is clearly superior for this example (when it comes to accuracy) with an average accuracy of around 0.88, compared to linear_SCV which gives an average accuracy of 0.68.
 
 
-# Scikit Learn: Interpreting our results
+# Scikit Learn: Interpreting our results (Optional)
 Is an accuracy value of 0.88 good? This is an overall accuracy value so it might not tell us the complete story. Since we have 16 categories we could get an accuracy value for one type of crop to be 1.0, while another type of crop at 0.5.
 
 Normally we would check our model against new data, but unfortunatly we do not have any. So the next best thing is to check it against the test_data that we got from splitting.
