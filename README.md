@@ -282,18 +282,52 @@ Please note that the original spectra data had 224 features (different spectra) 
 
 # Scikit Learn: Prediction
 * Go back to iPython, TYPE ```run SKL.py``` and hit ENTER.
-* After 5 seconds you should see the message ```Features used 198/200```
-    * Since we downloaded the corrected file which removed unnecessary, PCA only managed to remove 2 spectras.
-* TYPE ```linear_SVC()``` and hit ENTER
-    * The accuracy should pop up for linear_SVC
-* TYPE ```linear_SVC()``` and hit ENTER again!
-    * Notice how we have a different value for accuracy this time?
-        * This is because we are training and testing on different data everytime we enter the function (test_size=0.33)
-* TYPE ```k_nn()``` and hit ENTER
-    * The accuracy should pop up for k_nn
+* After 5 more seconds the accuracy for lin_svc should pop up.
+    * It should be around 0.68
+* After 15 more seconds the accuracy for knn should pop up.
+    * It should be around 0.88
 * Which algorithm gives the best accuracy?
-* The k_nn algorithm is clearly superior for this example with an average accuracy of around 0.73, compared to linear_SCV which gives an average accuracy of 0.60.
+* See what happens when you run the code again (TYPE ```run SKL.py``` and hit ENTER)
+    * Got different accuracy values? This is because we are training and testing on different data everytime we enter the function (test_size=0.33)
+* The knn algorithm is clearly superior for this example (when it comes to accuracy) with an average accuracy of around 0.88, compared to linear_SCV which gives an average accuracy of 0.68.
+
+
+# Scikit Learn: Interpreting our results
+Is an accuracy value of 0.88 good? This is an overall accuracy value so it might not tell us the complete story. Since we have 16 categories we could get an accuracy value for one type of crop to be 1.0, while another type of crop at 0.5.
+
+Normally we would check our model against new data, but unfortunatly we do not have any. So the next best thing is to check it against the test_data that we got from splitting.
+
+Copy and paste the following code into the interpretor or put it in the file (then rerun the file).
+```python
+"""Visualization of results"""
+import seaborn as sn
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
+
+array=normalize(confusion_matrix(Labels_test, knn.predict(Data_test)))
+  
+df_cm = pd.DataFrame(array, range(17),
+                  range(17))
+sn.set(font_scale=1.4)#for label size
+sn.heatmap(df_cm, annot=True,annot_kws={"size": 10}, cmap='Greens')# font size
+plt.xlabel('Predicted label', fontsize=16)
+plt.ylabel('True label', fontsize=16)
+plt.show()
+```
+This will give us a [confusion matrix]("https://en.wikipedia.org/wiki/Confusion_matrix") that should something like this.
+![](/images/SKL_prediction2.png?raw=true "Title")
+Confusion matrices are useful for showing us the strengths and the weaknessess of our multi-categorical machine learning algorithm. True positives (correct predictions) are placed along the diagonal of the chart.  
+As we can see we have good predictive values for most types of crops, but there are some crops with low predictive values and some with values of 0. This can be attributed to the following reasons
+* Small training size or size imbalances between categories (which I believe is the primary culprit)
+* Similar categories
+* A truely random category
+* Algorithm just does not work for this type of category
+
+Just for fun, here is a comparison between the true farm data against the predicted farm data.
+![](/images/imshow3.png?raw=true "Title")
+![](/images/SKL_prediction.png?raw=true "Title")
 
 
 # Scikit Learn: Optimization
-* We now have our models set and ready to use, but is there a way to make them even better? We can try to optimize them by adding in parameters when we call our algorithm method. Try playing around with the value of k in k_nn and see what you get. Optimization too much of a  complicated topic for this tutorial so we are going to end it there with Scikit-Learn. However if you would like to try to play around with the idea of optimization read the documentation of [linear SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html) and [knn](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html).
+We now have our models set and ready to use, but is there a way to make them even better? We can try to optimize them by adding in parameters when we call our algorithm method. Try playing around with the value of k in k_nn and see what you get. Optimization too much of a  complicated topic for this tutorial so we are going to end it there with Scikit-Learn. However if you would like to try to play around with the idea of optimization read the documentation of [linear SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html) and [knn](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html).
