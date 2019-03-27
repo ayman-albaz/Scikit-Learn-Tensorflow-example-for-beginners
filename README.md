@@ -326,7 +326,7 @@ As we can see we have good predictive values for most types of crops, but there 
 
 Just for fun, here is a comparison between the true farm data against the predicted farm data.
 ![](/images/imshow3.png?raw=true "Title")
-![](/images/SKL prediction.png?raw=true "Title")
+![](/images/SKL_prediction.png?raw=true "Title")
 
 
 # Scikit Learn: Optimization
