@@ -5,7 +5,7 @@ I am making this tutorial to help non-python users from various backgrounds (int
 
 This tutorial assumes you have Tensorflow-GPU, Python (v3.6), and iPython (Anaconda) installed on your machine.
 
-
+If at anytime in this tutorial your files stop working or you are stuck, feel free to download the python files (.py) from above. These are completed python files for the entire tutorial that will contain all the code that is used. Please do not just download and run the files from the start, try to actually follow the tutorial.
 
 # Downloading the files
 Go to http://lesun.weebly.com/hyperspectral-data-set.html, scroll to Indian Pines, and download the following files: "corrected Indian Pines (5.7 MB)" and "Indian Pines groundtruth (1.1 KB)". Make a folder in your desktop called TF_Tutorial,and put the 2 files in there.
