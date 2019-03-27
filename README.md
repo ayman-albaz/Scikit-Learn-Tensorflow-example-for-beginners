@@ -280,7 +280,7 @@ print (f'knn accuracy: {knn.score(Data_test, Labels_test)}')
 Please note that the original spectra data had 224 features (different spectra) but we downloaded the corrected file which reduced the number of features to 200, which is why the PCA won't remove much features in this example.
 
 
-# Scikit Learn: Prediction
+# Scikit Learn: Testing
 * Go back to iPython, TYPE ```run SKL.py``` and hit ENTER.
 * After 5 more seconds the accuracy for lin_svc should pop up.
     * It should be around 0.68
@@ -326,7 +326,7 @@ As we can see we have good predictive values for most types of crops, but there 
 
 Just for fun, here is a comparison between the true farm data against the predicted farm data.
 ![](/images/imshow3.png?raw=true "Title")
-![](/images/SKL_prediction.png?raw=true "Title")
+![](/images/SKL prediction.png?raw=true "Title")
 
 
 # Scikit Learn: Optimization
