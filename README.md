@@ -135,7 +135,7 @@ KNN is fairly straight foreword, it classifies a new data point by looking at th
 # Scikit Learn: RED FLAG
 Did you spot anything that seemed off with what I've said so far? We were about to do a really big mistake without even noticing. I've actually commited this mistake myself, and I only noticed this now, once I've finished the entire tutorial and was about to submit it to my PI. I've written all of my code for both scikit learn and Tensorflow with this big mistake in the background. This just shows how there are always ways to make your code better and mistake free, no matter how much experience and knowledge you think you may have. 
 
-What is the mistake? We are looking to classify *crops* using spectroscopic points. Yet half of your data is *not crops*... it's just non-crop landscape. Crops are uniform, background landscape is not. For those who are not familiar to spectroscopy, each chemical compound emits a different array of spectra, crops will have a homogenous distribution of the same compounds, while non-crops can differ drastically as they can be made from different types of organic and non-organic matter. This will mess around with the accuracy of algorithms! We need to remove all non-crop datapoints and labels from our dataset!
+What is the mistake? We are looking to classify *crops* using spectroscopic data. Yet half of your data is *not crops*... it's just non-crop landscape. Crops are uniform, background landscape is not. For those whoiliar are not fam to spectroscopy, each chemical compound emits a different array of spectra, crops will have a homogenous distribution of the same compounds, while non-crops can differ drastically as they can be made from different types of organic and non-organic matter. This will mess around with the accuracy of algorithms (since the values are somewhat chaotic)! We need to remove all non-crop datapoints and labels from our dataset!
 
 As we've seen using ```np.unique(labels, return_counts=True)```, more than half our data is non-crop which is represented by the label 0.
 
@@ -144,13 +144,13 @@ For those who are interested in how I figured this out, I noticed a high volatil
 I will highlight the fix code down below.
 
 # Scikit Learn: Implementation
-Create a new file called ```SKL.py``` in the same directory. Copy and past the following code inside the file and save:
+Create a new file called ```clean_data.py``` in the same directory. Copy and paste the following code inside the file and save:
+
 ```python
 from scipy.io import loadmat
 import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import normalize
-
 
 """Loading our features and labels from the matlab file"""
 features= loadmat('Indian_pines_corrected.mat')['indian_pines_corrected']
@@ -160,40 +160,45 @@ labels= loadmat('Indian_pines_gt.mat')['indian_pines_gt']
 features=features.reshape((-1,features.shape[2]))   
 labels= labels.reshape(-1)
 
-"""Getting rid of all that non-crop data"""
-
-
 """Normalizing data. This will save us alot of processing time"""
 features=normalize(features)
 
-"""PCA to reduce the number of necessary features (200 spectroscopic features). PCA is set to do it automatically."""
+"""PCA to reduce the amount of necessary features (200 spectroscopic features). PCA is set to do it automatically."""
 pca=PCA(n_components='mle', svd_solver='full')
 data=pca.fit_transform(features)
 print(f'Features used {len(pca.components_)}/{features.shape[1]}')
 
 
-def linear_svc():
-    """This is the linear support vector classification algorithm. We declare the algorithm, train+split, fit, predict."""
-    from sklearn.svm import LinearSVC
-    lin_svc=LinearSVC()
-    
-    from sklearn.model_selection import train_test_split
-    Data_train, Data_test, Labels_train, Labels_test = train_test_split(data, labels, test_size=0.33)
-    
-    lin_svc.fit(Data_train, Labels_train)
-    print (lin_svc.score(Data_test, Labels_test))
-    
-    
-def k_nn():
-    """This is the k-nearest-neighbors classification algorithm. We declare the algorithm (with k=19), train+split, fit, predict."""
-    from sklearn.neighbors import KNeighborsClassifier
-    knn = KNeighborsClassifier(n_neighbors=19)
-    
-    from sklearn.model_selection import train_test_split
-    Data_train, Data_test, Labels_train, Labels_test = train_test_split(data, labels, test_size=0.33)
-    
-    knn.fit(Data_train, Labels_train)
-    print (f'Accuracy: {knn.score(Data_test, Labels_test)}')
+"""Removing the non-crop data by turning all their spectra values to 0"""
+for i, label in enumerate(labels):
+    if label==0:
+        data[i]=np.zeros((data.shape[1],))
+```
+
+Create a new file called ```SKL.py``` in the same directory. Copy and past the following code inside the file and save:
+```python
+from clean_data import *
+
+"""This is the linear support vector classification algorithm. We declare the algorithm, train+split, fit, predict."""
+from sklearn.svm import LinearSVC
+lin_svc=LinearSVC()
+
+from sklearn.model_selection import train_test_split
+Data_train, Data_test, Labels_train, Labels_test = train_test_split(data, labels, test_size=0.33)
+
+lin_svc.fit(Data_train, Labels_train)
+print (f'Lin_svc accuracy: {lin_svc.score(Data_test, Labels_test)}')
+
+
+"""This is the k-nearest-neighbors classification algorithm. We declare the algorithm (with k=19), train+split, fit, predict."""
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier(n_neighbors=19)
+
+from sklearn.model_selection import train_test_split
+Data_train, Data_test, Labels_train, Labels_test = train_test_split(data, labels, test_size=0.33)
+
+knn.fit(Data_train, Labels_train)
+print (f'knn accuracy: {knn.score(Data_test, Labels_test)}')
 ```
 
 This all looks confusing, but we will go through it!
@@ -219,7 +224,7 @@ features=normalize(features)
     [[0.37139068, 0.55708601, 0.74278135], 
     [0.37139068, 0.55708601, 0.74278135], 
     [0.57735027, 0.57735027, 0.57735027]].
-    * We can see [normalization](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.normalize.html) reduces the values of each array to be in between 0 to 1, while keeping their relative proportions (for each row of the array) to be the same.
+    * We can see [normalization](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.normalize.html) reduces the values of each array to be in between 0 to 1, while keeping their relative ratios (for each row of the array) to be the same.
     * This is important because when we reduce the size of numbers we can increase the speed of the algorithms.
     * This not decrease the accuracy of the algorithm because the the relative proportion is still the same between points.
     
@@ -234,18 +239,24 @@ print(f'Features used {len(pca.components_)}/{features.shape[1]}')
 * n_components='mle', svd_solver='full' just mean the computer will just figure out which features out of the 200 are worth having for our calculations. Remember how some lines in the graph don't move throughout the figure? Those will probably be removed out.
 * Most of the time when you are working with big data you want to manually choose the amount of features you have, but since our data is relatively small, we can use an automatic PCA even if it will give us some features that add little to the accuracy.
 
+```python
+"""Removing the non-crop data by turning all their spectra values to 0"""
+for i, label in enumerate(labels):
+    if label==0:
+        data[i]=np.zeros((data.shape[1],))
+```
+* This code is pretty self explanatory it just reduces all our background non-crop data to 0, this is important because there is not way to classify something as background to the choatic nature of the background.
 
 ```python
-def linear_svc():
-    """This is the linear support vector classification algorithm. We declare the algorithm, train+split, fit, predict."""
-    from sklearn.svm import LinearSVC
-    lin_svc=LinearSVC()
-    
-    from sklearn.model_selection import train_test_split
-    Data_train, Data_test, Labels_train, Labels_test = train_test_split(data, labels, test_size=0.33)
-    
-    lin_svc.fit(Data_train, Labels_train)
-    print (f'Accuracy: {lin_svc.score(Data_test, Labels_test)}')
+"""This is the linear support vector classification algorithm. We declare the algorithm, train+split, fit, predict."""
+from sklearn.svm import LinearSVC
+lin_svc=LinearSVC()
+
+from sklearn.model_selection import train_test_split
+Data_train, Data_test, Labels_train, Labels_test = train_test_split(data, labels, test_size=0.33)
+
+lin_svc.fit(Data_train, Labels_train)
+print (f'Lin_svc accuracy: {lin_svc.score(Data_test, Labels_test)}')
 ```
 * This is a linear svc algorithm that we talked about earlier. 
 * In the first chunk of this code we import the our LinearScv model. 
@@ -254,16 +265,15 @@ def linear_svc():
 
 
 ```python
-def k_nn():
-    """This is the k-nearest-neighbors classification algorithm. We declare the algorithm (with k=19), train+split, fit, predict."""
-    from sklearn.neighbors import KNeighborsClassifier
-    knn = KNeighborsClassifier(n_neighbors=19)
-    
-    from sklearn.model_selection import train_test_split
-    Data_train, Data_test, Labels_train, Labels_test = train_test_split(data, labels, test_size=0.33)
-    
-    knn.fit(Data_train, Labels_train)
-    print (f'Accuracy: {knn.score(Data_test, Labels_test)}')
+"""This is the k-nearest-neighbors classification algorithm. We declare the algorithm (with k=19), train+split, fit, predict."""
+from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier(n_neighbors=19)
+
+from sklearn.model_selection import train_test_split
+Data_train, Data_test, Labels_train, Labels_test = train_test_split(data, labels, test_size=0.33)
+
+knn.fit(Data_train, Labels_train)
+print (f'knn accuracy: {knn.score(Data_test, Labels_test)}')
 ```
 * This is the exact same implementation as linear_SVC, but instead we are using k-nearest-neighbors and sitting the value of k to 19.
 
