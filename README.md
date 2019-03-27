@@ -8,7 +8,7 @@ This tutorial assumes you have Tensorflow-GPU, Python (v3.6), and iPython (Anaco
 
 
 # Downloading the files
-Go to http://lesun.weebly.com/hyperspectral-data-set.html, scroll to Indian Pines, and download the following files: "corrected Indian Pines (5.7 MB)" and "Indian Pines groundtruth (1.1 KB)". Make a folder in your desktop called TF_Tutorial, and put the 2 files in there.
+Go to http://lesun.weebly.com/hyperspectral-data-set.html, scroll to Indian Pines, and download the following files: "corrected Indian Pines (5.7 MB)" and "Indian Pines groundtruth (1.1 KB)". Make a folder in your desktop called TF_Tutorial,and put the 2 files in there.
 
 
 
@@ -98,7 +98,7 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
 
 ![](/images/ml_map.png?raw=true "Title")
 
-Lets start at the beginning
+Let’s start at the beginning
 1. At first it may seem like we have >50 samples since we have 140x140 pixels (19600 values), however we have to remember we are not working with 2 categories of equal destruction, but multi-categorial data of different distribution. This means we could have 1 category with 19500 feature values and the rest containing feature values smaller than 50. 
     * Open iPython, TYPE ```np.unique(labels, return_counts=True)``` and hit ENTER. You should see an array of all categories in our labels array as well as the amount of time they should up in the entire array.
     * Notice that the categories of 7 and 9 do not contain a value greater than 50.
@@ -163,7 +163,7 @@ labels= labels.reshape(-1)
 """Normalizing data. This will save us alot of processing time"""
 features=normalize(features)
 
-"""PCA to reduce the amount of necessary features (200 spectroscopic features). PCA is set to do it automatically."""
+"""PCA to reduce the number of necessary features (200 spectroscopic features). PCA is set to do it automatically."""
 pca=PCA(n_components='mle', svd_solver='full')
 data=pca.fit_transform(features)
 print(f'Features used {len(pca.components_)}/{features.shape[1]}')
@@ -237,7 +237,7 @@ print(f'Features used {len(pca.components_)}/{features.shape[1]}')
 ```
 * [Principal component analysis (PCA), which is a statistical procedure that uses an orthogonal transformation to convert a set of observations of possibly correlated variables (entities each of which takes on various numerical values) into a set of values of linearly uncorrelated variables called principal components.](https://en.wikipedia.org/wiki/Principal_component_analysis)
 * n_components='mle', svd_solver='full' just mean the computer will just figure out which features out of the 200 are worth having for our calculations. Remember how some lines in the graph don't move throughout the figure? Those will probably be removed out.
-* Most of the time when you are working with big data you want to manually choose the amount of features you have, but since our data is relatively small, we can use an automatic PCA even if it will give us some features that add little to the accuracy.
+* Most of the time when you are working with big data you want to manually choose the amount of features you have, but since our data is relatively small, we can use an automatic PCA even if it will give us some features that add little to the accuracy. In this example PCA only removes 2 spectral categories.
 
 ```python
 """Removing the non-crop data by turning all their spectra values to 0"""
@@ -288,16 +288,16 @@ Please note that the original spectra data had 224 features (different spectra) 
     * It should be around 0.88
 * Which algorithm gives the best accuracy?
 * See what happens when you run the code again (TYPE ```run SKL.py``` and hit ENTER)
-    * Got different accuracy values? This is because we are training and testing on different data everytime we enter the function (test_size=0.33)
+    * Got different accuracy values? This is because we are training and testing on different data every time we run the code(test_size=0.33)
 * The knn algorithm is clearly superior for this example (when it comes to accuracy) with an average accuracy of around 0.88, compared to linear_SCV which gives an average accuracy of 0.68.
 
 
 # Scikit Learn: Interpreting our results (Optional)
 Is an accuracy value of 0.88 good? This is an overall accuracy value so it might not tell us the complete story. Since we have 16 categories we could get an accuracy value for one type of crop to be 1.0, while another type of crop at 0.5.
 
-Normally we would check our model against new data, but unfortunatly we do not have any. So the next best thing is to check it against the test_data that we got from splitting.
+Normally we would check our model against new data, but unfortunately we do not have any. So the next best thing is to check it against the test_data that we got from splitting.
 
-Copy and paste the following code into the interpretor or put it in the file (then rerun the file).
+Copy and paste the following code into iPython or put it in the file (then rerun the file).
 ```python
 """Visualization of results"""
 import seaborn as sn
@@ -317,7 +317,7 @@ plt.show()
 ```
 This will give us a [confusion matrix]("https://en.wikipedia.org/wiki/Confusion_matrix") that should something like this.
 ![](/images/SKL_prediction2.png?raw=true "Title")
-Confusion matrices are useful for showing us the strengths and the weaknessess of our multi-categorical machine learning algorithm. True positives (correct predictions) are placed along the diagonal of the chart.  
+Confusion matrices are useful for showing us the strengths and the weaknesses of our multi-categorical machine learning algorithm. True positives (correct predictions) are placed along the diagonal of the chart.  
 As we can see we have good predictive values for most types of crops, but there are some crops with low predictive values and some with values of 0. This can be attributed to the following reasons
 * Small training size or size imbalances between categories (which I believe is the primary culprit)
 * Similar categories
@@ -330,4 +330,4 @@ Just for fun, here is a comparison between the true farm data against the predic
 
 
 # Scikit Learn: Optimization
-We now have our models set and ready to use, but is there a way to make them even better? We can try to optimize them by adding in parameters when we call our algorithm method. Try playing around with the value of k in k_nn and see what you get. Optimization too much of a  complicated topic for this tutorial so we are going to end it there with Scikit-Learn. However if you would like to try to play around with the idea of optimization read the documentation of [linear SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html) and [knn](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html).
+We now have our models set and ready to use, but is there a way to make them even better? We can try to optimize them by adding in parameters when we call our algorithm method. Try playing around with the value of k in k_nn and see what you get. Optimization too much of a complicated topic for this tutorial so we are going to end it there with Scikit-Learn. However if you would like to try to play around with the idea of optimization read the documentation of [linear SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html) and [knn](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html).
