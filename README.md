@@ -330,7 +330,7 @@ Just for fun, here is a comparison between the true farm data against the predic
 
 
 # Scikit Learn: Optimization
-We now have our models set and ready to use, but is there a way to make them even better? We can try to optimize them by adding in parameters when we call our algorithm method. Try playing around with the value of k in k_nn and see what you get. Optimization too much of a complicated topic for this tutorial so we are going to end it there with Scikit-Learn. However if you would like to try to play around with the idea of optimization read the documentation of [linear SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html) and [knn](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html).
+We now have our models set and ready to use, but is there a way to make them even better? We can try to optimize them by adding in parameters when we call our algorithm method. Try playing around with the value of k in k_nn and see what you get. Optimization too much of a complicated topic for this tutorial so we are going to end it there with Scikit-Learn. I will make a whole seperate tutorial on both Scikit learn and Tensorflow optimization later on. However if you would like to try to play around with the idea of optimization read the documentation of [linear SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html) and [knn](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html).
 
 
 # Tensorflow: Theory
@@ -343,3 +343,62 @@ Reasons to not to use neural networks (NN) in comparison to regular machine lear
 * Harder to optimize
 * Longer time to execute
 * Sometimes regular MLA outperform NN
+
+
+# Tensorflow: Implementation
+Create a new file called ```tf_tut.py``` in the same directory. Copy and paste the following code inside the file and save:
+```python
+from clean_data import *
+import tensorflow as tf
+from tensorflow.keras.callbacks import EarlyStopping
+
+"""Tensorflow model code"""
+model = tf.keras.models.Sequential()  # a basic feed-forward model
+model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
+model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
+model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
+model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
+model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
+
+
+model.add(tf.keras.layers.Dense(17, activation=tf.nn.softmax))  # our output layer. 10 units for 10 classes. Softmax for probability distribution
+
+model.compile(optimizer='adam',  # Good default optimizer to start with
+              loss='sparse_categorical_crossentropy',  # how will we calculate our "error." Neural network aims to minimize loss.
+              metrics=['accuracy'])  # what to track
+
+model.fit(data, labels,
+                  epochs=10,
+                  batch_size=32,
+                  validation_split=0.1,
+                  callbacks=[EarlyStopping(patience=3),])  # train the model
+```
+Please note I reused alot of code from a Youtuber named "Sentdex" and fit it to this problem, so if you want to know more about him click [here]("https://www.youtube.com/user/sentdex"). 
+
+# Tensorflow: Implementation Explanation
+```python
+model = tf.keras.models.Sequential()  # a basic feed-forward model
+```
+* *If you have not watch the videos I linked to above, you will have a hard time understanding what is going on here.*
+* All NNs use models. [Sequential]("https://www.tensorflow.org/api_docs/python/tf/keras/models/Sequential") is a type of model that just makes a linear stack of the models that we will call after this line of code. Sequential models do not share layers or have multiple inputs or outputs.
+* The other type of Tensorflow model which we will not be using is a [functional]("https://www.tensorflow.org/alpha/guide/keras/functional") model, which allows for different layers to connect to each other, as well as multiple inputs and outputs.
+
+
+```python
+model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
+model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
+model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
+model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
+model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
+```
+* A dense layer is just a layer of neurons that [recieves input from the neurons which are before it]("https://cdn-images-1.medium.com/max/1200/1*eJ36Jpf-DE9q5nKk67xT0Q.jpeg"). The first dense layer here will recieve input from the features we made earlier and output it to the next. The second layer will recieve input from the 1st layer and do the same, and so and and so forth. The reason why there are 5 layers here instead of 1 is because we have many complex features (200 spectra) that all have unique and complicated interactions with each other. Generally speaking, the more complicated the interaction between features the more layers you will have. 
+* 128 neurons were chosen for this example just because they gave me the best results from the start, I'm sure a different number will be chosen once I have optmiized this model.
+* An activation function of relu stands for rectified linear unit. It kind of tlooks [like this]("https://cdn-images-1.medium.com/max/1200/1*oePAhrm74RNnNEolprmTaQ.png"). Generally speaking this is how it works, ff the weighted sum of the input + the bias is less than 0, the neuron will not activate because its value will equal to 0 however if it is greater than 0, it will cause the neuron to activate because its value will be equal to 1. You can read more about activation functions [here]("https://medium.com/the-theory-of-everything/understanding-activation-functions-in-neural-networks-9491262884e0"). Relu is usually the go-to activation function as it preforms well and is quick.
+
+```python
+model.add(tf.keras.layers.Dense(17, activation=tf.nn.softmax))  # our output layer. 10 units for 10 classes. Softmax for probability distribution
+```
+
+
+# Tensorflow: Note of caution
+The code that I have implemented above is very basic and very flawed. It was written just so you can have a basic grasp behind the ideas of neural network and how they work. A better version of the code will be made during my optimization tutorial.
