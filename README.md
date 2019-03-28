@@ -318,8 +318,9 @@ plt.show()
 This will give us a [confusion matrix]("https://en.wikipedia.org/wiki/Confusion_matrix") that should something like this.
 ![](/images/SKL_prediction2.png?raw=true "Title")
 Confusion matrices are useful for showing us the strengths and the weaknesses of our multi-categorical machine learning algorithm. True positives (correct predictions) are placed along the diagonal of the chart.  
-As we can see we have good predictive values for most types of crops, but there are some crops with low predictive values and some with values of 0. This can be attributed to the following reasons
-* Small training size or size imbalances between categories (which I believe is the primary culprit)
+As we can see we have good accuracy for most types of crops, but there are some crops with low accuracy values and some with values of 0. This can be attributed to the following reasons
+* Small training size and/or size imbalances between categories (which I believe is the primary culprit)
+    * Just type ```np.unique(labels, return_counts=True)``` and you will see that labels with low sample number have the lowest accuracy values in the confusion matrix
 * Similar categories
 * A truely random category
 * Algorithm just does not work for this type of category
@@ -401,4 +402,4 @@ model.add(tf.keras.layers.Dense(17, activation=tf.nn.softmax))  # our output lay
 
 
 # Tensorflow: Note of caution
-The code that I have implemented above is very basic and very flawed. It was written just so you can have a basic grasp behind the ideas of neural network and how they work. A better version of the code will be made during my optimization tutorial.
+The code that I have made is very basic and obvious flaws. It was written just so you can develop a basic grasp behind the typical structure of a neural network. A better version of the code will be made during my optimization tutorial.
