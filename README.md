@@ -77,10 +77,10 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
     
     You will see the spectroscopic image. Once you are done examining it close the window, now a line plot should appear, examine it then close it.
     
-    ![](/images/imshow.png?raw=true "Title")
-    ![](/images/imshow2.png?raw=true "Title")
-    ![](/images/imshow3.png?raw=true "Title")
-    ![](/images/lineplot.png?raw=true "Title")
+    ![](/images/imshow.png?raw=true "Single spectra slice")
+    ![](/images/imshow2.png?raw=true "Average spectra")
+    ![](/images/imshow3.png?raw=true "True farm area")
+    ![](/images/lineplot.png?raw=true "Change in spectra over first row of pixels")
     
     Some important information we can get from the first image is that we are not working with a clean uniform image. There are also visible clusters of similarly coloured polygons, which we can only assume to be a unique type of crop.
     
@@ -96,7 +96,7 @@ The last page will have all 145x145 pixels with a value of 0, as the ink did not
 # Scikit Learn: Introduction
 [Scikit-learn is a free software machine learning library for the Python programming language.](https://scikit-learn.org/stable/) Scikit learn can be a little intimidating at first, but once you have an idea of what you should be doing its fairly easy. The most difficult part about Scikit-learn is choosing the right machine learning algorithms. Ideally one should understand all the math behind all of algorithms, however if you are a beginner you should refer to the diagram below.
 
-![](/images/ml_map.png?raw=true "Title")
+![](/images/ml_map.png?raw=true "SKL cheat sheet")
 
 Let’s start at the beginning
 1. At first it may seem like we have >50 samples since we have 140x140 pixels (19600 values), however we have to remember we are not working with 2 categories of equal destruction, but multi-categorial data of different distribution. This means we could have 1 category with 19500 feature values and the rest containing feature values smaller than 50. 
@@ -124,13 +124,13 @@ Any machine learning implementation will involve the following steps.
 ### The first algorithm we will be implementing is Linear-SVC. 
 It works by generating a line that that will be used to classify the data points based on where they are relative to the line. For example, in our diagram below the Linear-SVC implementation is a bad one because both types of labels are on the same side of the line. If you were to use such implementation you would expect a score of around 0.50 (which is the worst-case scenario). The implementation on the right is the best one because each label is located on different sides of the line. This implementation would give us an accuracy of around 1. Please note that in the real world and in our example, you will almost never have an accuracy of 1. This can often be attributed to measurement error or outliers.
 
-![](/images/Linear_SCV_guide.png?raw=true "Title")
+![](/images/Linear_SCV_guide.png?raw=true "Linear SVC guide")
 
 
 ### The second algorithm we will be implementing is K-nearest-neighbors.
 KNN is fairly straight foreword, it classifies a new data point by looking at the 'K' closest existing labelled data points. 'K' can be set to any value of your choice. So if you choose a value of 3, the new data point will look at the nearest 3 existing labelled data points. This new datapoint will then be classified with the same label as the most common label of those 3 existing labelled data points. In the example below, the new point will be classified as blue, because of those 10 data points that are near it, the majority of them are blue.
 
-![](/images/KNN_guide.png?raw=true "Title")
+![](/images/KNN_guide.png?raw=true "KNN example")
 
 # Scikit Learn: RED FLAG
 Did you spot anything that seemed off with what I've said so far? We were about to do a really big mistake without even noticing. I've actually commited this mistake myself, and I only noticed this now, once I've finished the entire tutorial and was about to submit it to my PI. I've written all of my code for both scikit learn and Tensorflow with this big mistake in the background. This just shows how there are always ways to make your code better and mistake free, no matter how much experience and knowledge you think you may have. 
@@ -259,7 +259,7 @@ lin_svc.fit(Data_train, Labels_train)
 print (f'Lin_svc accuracy: {lin_svc.score(Data_test, Labels_test)}')
 ```
 * This is a linear svc algorithm that we talked about earlier. 
-* In the first chunk of this code we import the our LinearScv model. 
+* In the first chunk of this code we import the our LinearSvc model. 
 * In the second chunk of this code, we use ```train_test_split``` which takes our features and labels them and splits them in to 2 parts, one part will be used to train the machine learning algorithm, the other will be used to test against to see just how good our algorithm is. Now for the 2 main parts of any machine learning algorithm, training and testing.
 * In the third chunk of this code, we fit the training data to our linear_SVC model. We then measure its accuracy by using ```.score``` on the testing data.
 
@@ -289,7 +289,7 @@ Please note that the original spectra data had 224 features (different spectra) 
 * Which algorithm gives the best accuracy?
 * See what happens when you run the code again (TYPE ```run SKL.py``` and hit ENTER)
     * Got different accuracy values? This is because we are training and testing on different data every time we run the code(test_size=0.33)
-* The knn algorithm is clearly superior for this example (when it comes to accuracy) with an average accuracy of around 0.88, compared to linear_SCV which gives an average accuracy of 0.68.
+* The knn algorithm is clearly superior for this example (when it comes to accuracy) with an average accuracy of around 0.88, compared to linear_SVC which gives an average accuracy of 0.68.
 
 
 # Scikit Learn: Interpreting our results (Optional)
@@ -316,7 +316,7 @@ plt.ylabel('True label', fontsize=16)
 plt.show()
 ```
 This will give us a [confusion matrix]("https://en.wikipedia.org/wiki/Confusion_matrix") that should something like this.
-![](/images/SKL_prediction2.png?raw=true "Title")
+![](/images/SKL_prediction2.png?raw=true "KNN Confusion Matrix")
 Confusion matrices are useful for showing us the strengths and the weaknesses of our multi-categorical machine learning algorithm. True positives (correct predictions) are placed along the diagonal of the chart.  
 As we can see we have good accuracy for most types of crops, but there are some crops with low accuracy values and some with values of 0. This can be attributed to the following reasons
 * Small training size and/or size imbalances between categories (which I believe is the primary culprit)
@@ -326,8 +326,8 @@ As we can see we have good accuracy for most types of crops, but there are some 
 * Algorithm just does not work for this type of category
 
 Just for fun, here is a comparison between the true farm data against the predicted farm data.
-![](/images/imshow3.png?raw=true "Title")
-![](/images/SKL_prediction.png?raw=true "Title")
+![](/images/imshow3.png?raw=true "True map")
+![](/images/SKL_prediction.png?raw=true "Predicted map")
 
 
 # Scikit Learn: Optimization
