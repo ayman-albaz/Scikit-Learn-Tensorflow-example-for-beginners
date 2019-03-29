@@ -1,4 +1,4 @@
-# Scikit Learn & Tensorflow-example-for-beginners
+# Scikit Learn & Tensorflow example for beginners
 This is a step by step guide on implementing a Scikit Learn & Tensorflow-keras model. This is made for those with minimal experience in Python, some understanding of machine learning theory, and minimal experience in writing machine learning algorithms in Python.
 
 I am making this tutorial to help non-python users from various backgrounds (international and national) in my lab group understand the very basic principles and algorithms behind machine learning and data analysis, however everyone is welcome to follow along and learn. 
@@ -427,3 +427,9 @@ model.fit(data, labels,
 
 # Tensorflow: Note of caution
 The code that I have made is very basic and has obvious flaws. It was written just so you can understanding the basics behind the structure of a neural network. A better version of the code will be made during my optimization tutorial.
+
+
+# Scikit Learn: Testing
+* Go back to iPython, TYPE ```run tf_tut.py``` and hit ENTER.
+* You should see something that looks like this ![](/images/tf.png?raw=true "TF Results")
+* Here we can see the training loss, training accuracy, validation loss, and validation accuracy for each epoch
