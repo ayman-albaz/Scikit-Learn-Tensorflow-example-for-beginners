@@ -410,7 +410,20 @@ model.compile(optimizer='adam',  # Good default optimizer to start with
 * Now that we have made all of the necessary layers of our model, we have to compile the model. 
 * The model includes an optimizer which is set to 'adam'. Remember in the video you watched earlier how it said that everytime the algorithm goes through the NN, the algorithm will go back and adjusts the weights of the connections between neurons so that we can minimize loss? That's what the optimizer does. 'Adam' is just the go-to optimizer in most basic NN, however if you wan't to explore other optimizers [click here](https://www.tensorflow.org/api_docs/python/tf/train/Optimizer).
 * Loss measures how 'good' our model is. It is what we are trying to minimize. 'Sparse_categorical_crossentropy' refers to the type of loss function we will be using. There are other functions you can explore by [clicking here](https://www.tensorflow.org/api_docs/python/tf/losses).
-* Metrics just refers to what we want to track as the model is running. In this case we are monitoring accuracy. If you wish to track more things [click here](https://www.tensorflow.org/api_docs/python/tf/metrics)
+* Metrics just refers to what we want to track as the model is running. In this case we are monitoring accuracy. If you wish to track more things [click here](https://www.tensorflow.org/api_docs/python/tf/metrics).
+
+```python
+model.fit(data, labels,
+                  epochs=10,
+                  batch_size=32,
+                  validation_split=0.1,
+                  callbacks=[EarlyStopping(patience=3),])  # train the model
+```
+* Now we are training the model on our data.
+* 'Epochs' refers to the number of times we want our NN to go through the data and optimize. In this case it will do so 10 times.
+* 'Batch_size' refers to the number of data points that will be fed into the NN algorithm at a time. In this case 32 data points are put in at a time.
+* 'Validation_split' refers to the percentage of the training data that will be placed aside to be tested on. This is equivalent to the scikit learn function ```Data_train, Data_test, Labels_train, Labels_test = train_test_split(data, labels, test_size=0.33)```. In this case we will leave 10% of the data to test on.
+* 'Callbacks' are just functions that will be excuted during the training process. In this case we are running the function 'EarlyStopping' with a patience value of 3. This fuction will stop the NN from running once it notices that training does not improve the function. It will tolerate only 3 epochs of where the NN does not improve (in terms of loss). There are more callback functions that you can read about by [clicking here](https://keras.io/callbacks/). 
 
 # Tensorflow: Note of caution
 The code that I have made is very basic and has obvious flaws. It was written just so you can understanding the basics behind the structure of a neural network. A better version of the code will be made during my optimization tutorial.
