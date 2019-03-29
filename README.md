@@ -315,7 +315,7 @@ plt.xlabel('Predicted label', fontsize=16)
 plt.ylabel('True label', fontsize=16)
 plt.show()
 ```
-This will give us a [confusion matrix]("https://en.wikipedia.org/wiki/Confusion_matrix") that should something like this.
+This will give us a [confusion matrix](https://en.wikipedia.org/wiki/Confusion_matrix) that should something like this.
 ![](/images/SKL_prediction2.png?raw=true "KNN Confusion Matrix")
 Confusion matrices are useful for showing us the strengths and the weaknesses of our multi-categorical machine learning algorithm. True positives (correct predictions) are placed along the diagonal of the chart.  
 As we can see we have good accuracy for most types of crops, but there are some crops with low accuracy values and some with values of 0. This can be attributed to the following reasons
@@ -335,7 +335,7 @@ We now have our models set and ready to use, but is there a way to make them eve
 
 
 # Tensorflow: Theory
-Tensorflow uses neural networks which are a type of machine learning algorithm. I could spend a while explaining all of the theory behind how the algorithm works, but I think Youtube does a much better job. Here is a [short and brief video]("https://www.youtube.com/watch?v=rEDzUT3ymw4") and a [longer and detailed video]("https://www.youtube.com/watch?v=aircAruvnKk") video explaining the Tensorflow algorithm. Of the two, I recommend watching the longer video.
+Tensorflow uses neural networks which are a type of machine learning algorithm. I could spend a while explaining all of the theory behind how the algorithm works, but I think Youtube does a much better job. Here is a [short and brief video](https://www.youtube.com/watch?v=rEDzUT3ymw4) and a [longer and detailed video](https://www.youtube.com/watch?v=aircAruvnKk) video explaining the Tensorflow algorithm. Of the two, I recommend watching the longer video.
 
 In my opinion a reason to use Tensorflow against regular machine learning algorithms is that (generally speaking) neural networks take into account relationships between different features, while most machine learning algorithms just use the relationship between the features and the labels.
 
@@ -374,15 +374,15 @@ model.fit(data, labels,
                   validation_split=0.1,
                   callbacks=[EarlyStopping(patience=3),])  # train the model
 ```
-Please note I reused alot of code from a Youtuber named "Sentdex" and fit it to this problem, so if you want to know more about him click [here]("https://www.youtube.com/user/sentdex"). 
+Please note I reused alot of code from a Youtuber named "Sentdex" and fit it to this problem, so if you want to know more about him click [here](https://www.youtube.com/user/sentdex). 
 
 # Tensorflow: Implementation Explanation
 ```python
 model = tf.keras.models.Sequential()  # a basic feed-forward model
 ```
 * *If you have not watch the videos I linked to above, you will have a hard time understanding what is going on here.*
-* All NNs use models. [Sequential]("https://www.tensorflow.org/api_docs/python/tf/keras/models/Sequential") is a type of model that just makes a linear stack of the models that we will call after this line of code. Sequential models do not share layers or have multiple inputs or outputs.
-* The other type of Tensorflow model which we will not be using is a [functional]("https://www.tensorflow.org/alpha/guide/keras/functional") model, which allows for different layers to connect to each other, as well as multiple inputs and outputs.
+* All NNs use models. [Sequential](https://www.tensorflow.org/api_docs/python/tf/keras/models/Sequential) is a type of model that just makes a linear stack of the models that we will call after this line of code. Sequential models do not share layers or have multiple inputs or outputs.
+* The other type of Tensorflow model which we will not be using is a [functional](https://www.tensorflow.org/alpha/guide/keras/functional) model, which allows for different layers to connect to each other, as well as multiple inputs and outputs.
 
 
 ```python
@@ -392,14 +392,25 @@ model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-c
 model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
 model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
 ```
-* A dense layer is just a layer of neurons that [recieves input from the neurons which are before it]("https://cdn-images-1.medium.com/max/1200/1*eJ36Jpf-DE9q5nKk67xT0Q.jpeg"). The first dense layer here will recieve input from the features we made earlier and output it to the next. The second layer will recieve input from the 1st layer and do the same, and so and and so forth. The reason why there are 5 layers here instead of 1 is because we have many complex features (200 spectra) that all have unique and complicated interactions with each other. Generally speaking, the more complicated the interaction between features the more layers you will have. 
+* A dense layer is just a layer of neurons that [recieves input from the neurons which are before it](https://cdn-images-1.medium.com/max/1200/1*eJ36Jpf-DE9q5nKk67xT0Q.jpeg). The first dense layer here will recieve input from the features we made earlier and output it to the next. The second layer will recieve input from the 1st layer and do the same, and so and and so forth. The reason why there are 5 layers here instead of 1 is because we have many complex features (200 spectra) that all have unique and complicated interactions with each other. Generally speaking, the more complicated the interaction between features the more layers you will have. 
 * 128 neurons were chosen for this example just because they gave me the best results from the start, I'm sure a different number will be chosen once I have optmiized this model.
-* An activation function of relu stands for rectified linear unit. It kind of tlooks [like this]("https://cdn-images-1.medium.com/max/1200/1*oePAhrm74RNnNEolprmTaQ.png"). Generally speaking this is how it works, ff the weighted sum of the input + the bias is less than 0, the neuron will not activate because its value will equal to 0 however if it is greater than 0, it will cause the neuron to activate because its value will be equal to 1. You can read more about activation functions [here]("https://medium.com/the-theory-of-everything/understanding-activation-functions-in-neural-networks-9491262884e0"). Relu is usually the go-to activation function as it preforms well and is quick.
+* An activation function of relu stands for rectified linear unit. It kind of tlooks [like this](https://cdn-images-1.medium.com/max/1200/1*oePAhrm74RNnNEolprmTaQ.png). Generally speaking this is how it works, if the weighted sum of the input + the bias is less than 0, the neuron will not activate because its value will equal to 0 (this assumes that this neuron is only connected to one other neuron). However if weighted sum of the input + the bias is less than 0, it will cause the neuron to activate because its value will be equal the value of the weighted sum of the input + the bias (this assumes that this neuron is only connected to one other neuron). You can read more about activation functions [here](https://medium.com/the-theory-of-everything/understanding-activation-functions-in-neural-networks-9491262884e0). Relu is usually the go-to activation function as it preforms well and is quick.
 
 ```python
-model.add(tf.keras.layers.Dense(17, activation=tf.nn.softmax))  # our output layer. 10 units for 10 classes. Softmax for probability distribution
+model.add(tf.keras.layers.Dense(17, activation=tf.nn.softmax))  # our output layer. 17 units for 17 classes. Softmax for probability distribution
 ```
+* This looks similar to the layers above, but there is a difference. The last layer of any sequential netowrk will be the otuput layer. The value of 17 indicates how many categories we have, which is 17 in our case. We are not using relu but [softmax](https://www.researchgate.net/profile/Binghui_Chen/publication/319121953/figure/fig2/AS:527474636398592@1502771161390/Softmax-activation-function.png).
 
+
+```python
+model.compile(optimizer='adam',  # Good default optimizer to start with
+              loss='sparse_categorical_crossentropy',  # how will we calculate our "error." Neural network aims to minimize loss.
+              metrics=['accuracy'])  # what to track
+```
+* Now that we have made all of the necessary layers of our model, we have to compile the model. 
+* The model includes an optimizer which is set to 'adam'. Remember in the video you watched earlier how it said that everytime the algorithm goes through the NN, the algorithm will go back and adjusts the weights of the connections between neurons so that we can minimize loss? That's what the optimizer does. 'Adam' is just the go-to optimizer in most basic NN, however if you wan't to explore other optimizers [click here](https://www.tensorflow.org/api_docs/python/tf/train/Optimizer).
+* Loss measures how 'good' our model is. It is what we are trying to minimize. 'Sparse_categorical_crossentropy' refers to the type of loss function we will be using. There are other functions you can explore by [clicking here](https://www.tensorflow.org/api_docs/python/tf/losses).
+* Metrics just refers to what we want to track as the model is running. In this case we are monitoring accuracy. If you wish to track more things [click here](https://www.tensorflow.org/api_docs/python/tf/metrics)
 
 # Tensorflow: Note of caution
-The code that I have made is very basic and obvious flaws. It was written just so you can develop a basic grasp behind the typical structure of a neural network. A better version of the code will be made during my optimization tutorial.
+The code that I have made is very basic and has obvious flaws. It was written just so you can understanding the basics behind the structure of a neural network. A better version of the code will be made during my optimization tutorial.
