@@ -352,6 +352,7 @@ Create a new file called ```tf_tut.py``` in the same directory. Copy and paste t
 from clean_data import *
 import tensorflow as tf
 from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.optimizers import Adam
 
 """Tensorflow model code"""
 model = tf.keras.models.Sequential()  # a basic feed-forward model
@@ -360,19 +361,21 @@ model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-c
 model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
 model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
 model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
+model.add(tf.keras.layers.Dropout(0.5))
 
 
-model.add(tf.keras.layers.Dense(17, activation=tf.nn.softmax))  # our output layer. 10 units for 10 classes. Softmax for probability distribution
+model.add(tf.keras.layers.Dense(17, activation=tf.nn.softmax))  # our output layer. 17 units for 17 classes. Softmax for probability distribution
 
-model.compile(optimizer='adam',  # Good default optimizer to start with
+
+model.compile(optimizer=Adam(lr=0.0015),  # Good default optimizer to start with
               loss='sparse_categorical_crossentropy',  # how will we calculate our "error." Neural network aims to minimize loss.
               metrics=['accuracy'])  # what to track
 
 model.fit(data, labels,
-                  epochs=10,
+                  epochs=100,
                   batch_size=32,
                   validation_split=0.1,
-                  callbacks=[EarlyStopping(patience=3),])  # train the model
+                  callbacks=[EarlyStopping(patience=5),])  # train the model
 ```
 Please note I reused alot of code from a Youtuber named "Sentdex" and fit it to this problem, so if you want to know more about him click [here](https://www.youtube.com/user/sentdex). 
 
@@ -403,12 +406,13 @@ model.add(tf.keras.layers.Dense(17, activation=tf.nn.softmax))  # our output lay
 
 
 ```python
-model.compile(optimizer='adam',  # Good default optimizer to start with
+model.compile(optimizer=Adam(lr=0.0015),  # Good default optimizer to start with
               loss='sparse_categorical_crossentropy',  # how will we calculate our "error." Neural network aims to minimize loss.
               metrics=['accuracy'])  # what to track
 ```
 * Now that we have made all of the necessary layers of our model, we have to compile the model. 
-* The model includes an optimizer which is set to 'adam'. Remember in the video you watched earlier how it said that everytime the algorithm goes through the NN, the algorithm will go back and adjusts the weights of the connections between neurons so that we can minimize loss? That's what the optimizer does. 'Adam' is just the go-to optimizer in most basic NN, however if you wan't to explore other optimizers [click here](https://www.tensorflow.org/api_docs/python/tf/train/Optimizer).
+* The model includes an optimizer which is set to 'Adam'. Remember in the video you watched earlier how it said that everytime the algorithm goes through the NN, the algorithm will go back and adjusts the weights of the connections between neurons so that we can minimize loss? That's what the optimizer does. 'Adam' is just the go-to optimizer in most basic NN, however if you wan't to explore other optimizers [click here](https://www.tensorflow.org/api_docs/python/tf/train/Optimizer).
+    * lr is the learning rate. Change the values to change how fast the NN learns.
 * Loss measures how 'good' our model is. It is what we are trying to minimize. 'Sparse_categorical_crossentropy' refers to the type of loss function we will be using. There are other functions you can explore by [clicking here](https://www.tensorflow.org/api_docs/python/tf/losses).
 * Metrics just refers to what we want to track as the model is running. In this case we are monitoring accuracy. If you wish to track more things [click here](https://www.tensorflow.org/api_docs/python/tf/metrics).
 
@@ -429,7 +433,12 @@ model.fit(data, labels,
 The code that I have made is very basic and has obvious flaws. It was written just so you can understanding the basics behind the structure of a neural network. A better version of the code will be made during my optimization tutorial.
 
 
-# Scikit Learn: Testing
+# Tensorflow Learn: Testing
 * Go back to iPython, TYPE ```run tf_tut.py``` and hit ENTER.
 * You should see something that looks like this ![](/images/tf.png?raw=true "TF Results")
 * Here we can see the training loss, training accuracy, validation loss, and validation accuracy for each epoch
+* Depending on the validation split, you will see different results, your epochs might stop at 4, and you might get different accuracy values.
+* In my case, Tensorflow gave me better values than scikit learn, this might be different for you.
+* You will notice that if you keep running the model, you will keep seeing different results, once again this si because of a low number of data and their uneven distribution between different categories.
+
+# Tensorflow Learn: Interpreting our results (Optional)
