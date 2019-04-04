@@ -491,6 +491,7 @@ Notice how these values are much better than the KNN confusion matrix? This is t
 Please note if you get a row with only 0's in the heat map, just reload ```clean_data.py``` in order to get newly shuffled data. It could just be that all the data from one category ended up in the validation set (by pure chance).
 
 Just for fun, here is a comparison between the true farm data against the KNN predicted farm data and the TF predicted farm data (in that order).
+
 ![](/images/imshow3.png?raw=true "True map")
 ![](/images/SKL_prediction.png?raw=true "KNN Predicted map")
 ![](/images/TF_prediction.png?raw=true "TF Predicted map")
