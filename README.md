@@ -149,6 +149,7 @@ Create a new file called ```clean_data.py``` in the same directory. Copy and pas
 ```python
 from scipy.io import loadmat
 import numpy as np
+from random import shuffle
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import normalize
 
@@ -160,10 +161,16 @@ labels= loadmat('Indian_pines_gt.mat')['indian_pines_gt']
 features=features.reshape((-1,features.shape[2]))   
 labels= labels.reshape(-1)
 
+"""Shuffling the data and labels, while keeping their relative orders the same"""
+c=list(zip(features,labels))
+shuffle(c)
+features,labels=zip(*c)
+labels=np.array(labels)
+
 """Normalizing data. This will save us alot of processing time"""
 features=normalize(features)
 
-"""PCA to reduce the number of necessary features (200 spectroscopic features). PCA is set to do it automatically."""
+"""PCA to reduce the amount of necessary features (200 spectroscopic features). PCA is set to do it automatically."""
 pca=PCA(n_components='mle', svd_solver='full')
 data=pca.fit_transform(features)
 print(f'Features used {len(pca.components_)}/{features.shape[1]}')
@@ -227,7 +234,15 @@ features=normalize(features)
     * We can see [normalization](https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.normalize.html) reduces the values of each array to be in between 0 to 1, while keeping their relative ratios (for each row of the array) to be the same.
     * This is important because when we reduce the size of numbers we can increase the speed of the algorithms.
     * This not decrease the accuracy of the algorithm because the the relative proportion is still the same between points.
-    
+
+```python
+"""Shuffling the data and labels, while keeping their relative orders the same"""
+c=list(zip(features,labels))
+shuffle(c)
+features,labels=zip(*c)
+labels=list(labels)
+```
+* This is just to shuffle the data. We don't want to be getting the same results everytime we run the ML algorithms. It is important when shuffling features and labels to keep the two paired together, so that your data doesn't lose meaning (ie. each feature corresponds to the correct label despite the shuffle).
     
 ```python
 """PCA to reduce the number of necessary features (200 spectroscopic features). PCA is set to do it automatically."""
@@ -439,6 +454,6 @@ The code that I have made is very basic and has obvious flaws. It was written ju
 * Here we can see the training loss, training accuracy, validation loss, and validation accuracy for each epoch
 * Depending on the validation split, you will see different results, your epochs might stop at 4, and you might get different accuracy values.
 * In my case, Tensorflow gave me better values than scikit learn, this might be different for you.
-* You will notice that if you keep running the model, you will keep seeing different results, once again this si because of a low number of data and their uneven distribution between different categories.
+* You will notice that if you keep running the model, you will keep seeing different results, once again this is because of a low number of data and their uneven distribution between different categories.
 
 # Tensorflow Learn: Interpreting our results (Optional)
