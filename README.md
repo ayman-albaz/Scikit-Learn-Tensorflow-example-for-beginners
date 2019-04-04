@@ -308,7 +308,7 @@ Please note that the original spectra data had 224 features (different spectra) 
 
 
 # Scikit Learn: Interpreting our results (Optional)
-Is an accuracy value of 0.88 good? This is an overall accuracy value so it might not tell us the complete story. Since we have 16 categories we could get an accuracy value for one type of crop to be 1.0, while another type of crop at 0.5.
+Is an accuracy value of 0.88 good? This is an overall accuracy value so it might not tell us the complete story. Since we have 17 categories we could get an accuracy value for one type of crop to be 1.0, while another type of crop at 0.5.
 
 Normally we would check our model against new data, but unfortunately we do not have any. So the next best thing is to check it against the test_data that we got from splitting.
 
@@ -460,5 +460,45 @@ The code that I have made is very basic and has obvious flaws. It was written ju
 * Depending on the validation split, you will see different results, your epochs might stop at 8, and you might get different accuracy values.
 * In my case, Tensorflow gave me better values than Scikit learn, this might be different for you.
 * You will notice that if you keep running the model, you will keep seeing different results, once again this is because of a low number of data and their uneven distribution between different categories.
+* Please note, that when you want to run the TF model I recommend you do not type ```run tf_tut.py``` and hitting enter again. Instead type ```exit()``` hit enter, then type ```ipython``` hit enter, then type ```run tf_tut.py``` and hit enter. This is just so you can  get a new randomized dataset everytime. Also if you are on a weak computer, opening and closing iPython will help to clean your RAM.
 
 # Tensorflow Learn: Interpreting our results (Optional)
+Is an validation accuracy value of 0.95 good? This is an overall accuracy value so it might not tell us the complete story. Since we have 17 categories we could get an accuracy value for one type of crop to be 1.0, while another type of crop at 0.5.
+
+Normally we would check our model against new data, but unfortunately we do not have any. So the next best thing is to check it against the test_data that we got from splitting.
+
+Copy and paste the following code into iPython or put it in the file (then rerun the file).
+```python
+"""Visualization of results"""
+import seaborn as sn
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
+
+array=normalize(confusion_matrix(model.history.validation_data[1], model.predict_classes(model.history.validation_data[0])))
+  
+df_cm = pd.DataFrame(array, range(17),
+                  range(17))
+sn.set(font_scale=1.4)#for label size
+sn.heatmap(df_cm, annot=True,annot_kws={"size": 10}, cmap='Blues')# font size
+plt.xlabel('Predicted label', fontsize=16)
+plt.ylabel('True label', fontsize=16)
+plt.show()
+```
+This will give us a [confusion matrix](https://en.wikipedia.org/wiki/Confusion_matrix) that should something like this.
+![](/images/TF_prediction2.png?raw=true "TF Confusion Matrix")
+Notice how these values are much better than the KNN confusion matrix? This is the power of NN. And this is with just some optimization being implemented (which I casually inserted into the code).
+Please note if you get a row with only 0's in the heat map, just reload ```clean_data.py``` in order to get newly shuffled data. It could just be that all the data from one category ended up in the validation set (by pure chance).
+
+Just for fun, here is a comparison between the true farm data against the KNN predicted farm data and the TF predicted farm data (in that order).
+![](/images/imshow3.png?raw=true "True map")
+![](/images/SKL_prediction.png?raw=true "KNN Predicted map")
+![](/images/TF_prediction.png?raw=true "TF Predicted map")
+Again look how close the TF map is to the true map, compared with the KNN map to the true map.
+
+
+# TF Learn: Optimization
+TF optimization is hard, and takes a lot of time to implement. Which is why it will be left for another day. Even the worlds top machine learning experts and TF users have a hard time implementing the optimum TF parameters. Also remember that there is no 'correct' algorithm optimization. A lot of TF optimization involves trial and error.
+To get better at using TF I recommend to keep using TF on other problems as well as familiarizing yourself with the theory behind the algorithm (statistics, calculus, probability).
+
+# Closing Remarks
