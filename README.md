@@ -133,13 +133,13 @@ KNN is fairly straight foreword, it classifies a new data point by looking at th
 ![](/images/KNN_guide.png?raw=true "KNN example")
 
 # Scikit Learn: RED FLAG
-Did you spot anything that seemed off with what I've said so far? We were about to do a really big mistake without even noticing. I've actually commited this mistake myself, and I only noticed this now, once I've finished the entire tutorial and was about to submit it to my PI. I've written all of my code for both scikit learn and Tensorflow with this big mistake in the background. This just shows how there are always ways to make your code better and mistake free, no matter how much experience and knowledge you think you may have. 
+Did you spot anything that seemed off with what I've said so far? We were about to do a really big mistake without even noticing. I've actually made this mistake myself, and I only noticed this now, once I've finished the entire tutorial and was about to submit it to my PI. I've written all of my code for both Scikit learn and Tensorflow with this big mistake in the background. This just shows how there are always ways to make your code better and mistake free, no matter how much experience and knowledge you think you may have. 
 
-What is the mistake? We are looking to classify *crops* using spectroscopic data. Yet half of your data is *not crops*... it's just non-crop landscape. Crops are uniform, background landscape is not. For those whoiliar are not fam to spectroscopy, each chemical compound emits a different array of spectra, crops will have a homogenous distribution of the same compounds, while non-crops can differ drastically as they can be made from different types of organic and non-organic matter. This will mess around with the accuracy of algorithms (since the values are somewhat chaotic)! We need to remove all non-crop datapoints and labels from our dataset!
+What is the mistake? We are looking to classify *crops* using spectroscopic data. Yet half of your data is *not crops*... it's just non-crop landscape. Crops are uniform, background landscape is not. For those who are not familiar with spectroscopy, each chemical compound emits a different array of spectra, crops will have a homogenous distribution of the same compounds, while non-crops can differ drastically as they can be made from different types of organic and non-organic matter. This will mess around with the accuracy of algorithms (since the values are somewhat chaotic)! We need to remove all non-crop datapoints and labels from our dataset!
 
 As we've seen using ```np.unique(labels, return_counts=True)```, more than half our data is non-crop which is represented by the label 0.
 
-For those who are interested in how I figured this out, I noticed a high volatility in my algorithm scores. I thought about it and finally figured out that the only ranodm elements from the dataset are from non-crop datapoints. 
+For those who are interested in how I figured this out, I noticed a high volatility in my algorithm scores. I thought about it and finally figured out that the only random elements from the dataset are from non-crop datapoints. 
 
 I will highlight the fix code down below.
 
@@ -337,7 +337,7 @@ As we can see we have good accuracy for most types of crops, but there are some 
 * Small training size and/or size imbalances between categories (which I believe is the primary culprit)
     * Just type ```np.unique(labels, return_counts=True)``` and you will see that labels with low sample number have the lowest accuracy values in the confusion matrix
 * Similar categories
-* A truely random category
+* A truly random category
 * Algorithm just does not work for this type of category
 
 Just for fun, here is a comparison between the true farm data against the predicted farm data.
@@ -346,7 +346,7 @@ Just for fun, here is a comparison between the true farm data against the predic
 
 
 # Scikit Learn: Optimization
-We now have our models set and ready to use, but is there a way to make them even better? We can try to optimize them by adding in parameters when we call our algorithm method. Try playing around with the value of k in k_nn and see what you get. Optimization too much of a complicated topic for this tutorial so we are going to end it there with Scikit-Learn. I will make a whole seperate tutorial on both Scikit learn and Tensorflow optimization later on. However if you would like to try to play around with the idea of optimization read the documentation of [linear SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html) and [knn](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html).
+We now have our models set and ready to use, but is there a way to make them even better? We can try to optimize them by adding in parameters when we call our algorithm method. Try playing around with the value of k in k_nn and see what you get. Optimization too much of a complicated topic for this tutorial so we are going to end it there with Scikit-Learn. I will make a whole separate tutorial on both Scikit learn and Tensorflow optimization later on. However if you would like to try to play around with the idea of optimization read the documentation of [linear SVC](https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html) and [knn](https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html).
 
 
 # Tensorflow: Theory
@@ -392,7 +392,7 @@ model.fit(data, labels,
                   validation_split=0.1,
                   callbacks=[EarlyStopping(patience=5),])  # train the model
 ```
-Please note I reused alot of code from a Youtuber named "Sentdex" and fit it to this problem, so if you want to know more about him click [here](https://www.youtube.com/user/sentdex). 
+Please note I reused a lot of code from a Youtuber named "Sentdex" and fit it to this problem, so if you want to know more about him click [here](https://www.youtube.com/user/sentdex). 
 
 # Tensorflow: Implementation Explanation
 ```python
@@ -410,9 +410,14 @@ model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-c
 model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
 model.add(tf.keras.layers.Dense(128, activation=tf.nn.relu))  # a simple fully-connected layer, 128 units, relu activation
 ```
-* A dense layer is just a layer of neurons that [recieves input from the neurons which are before it](https://cdn-images-1.medium.com/max/1200/1*eJ36Jpf-DE9q5nKk67xT0Q.jpeg). The first dense layer here will recieve input from the features we made earlier and output it to the next. The second layer will recieve input from the 1st layer and do the same, and so and and so forth. The reason why there are 5 layers here instead of 1 is because we have many complex features (200 spectra) that all have unique and complicated interactions with each other. Generally speaking, the more complicated the interaction between features the more layers you will have. 
-* 128 neurons were chosen for this example just because they gave me the best results from the start, I'm sure a different number will be chosen once I have optmiized this model.
-* An activation function of relu stands for rectified linear unit. It kind of tlooks [like this](https://cdn-images-1.medium.com/max/1200/1*oePAhrm74RNnNEolprmTaQ.png). Generally speaking this is how it works, if the weighted sum of the input + the bias is less than 0, the neuron will not activate because its value will equal to 0 (this assumes that this neuron is only connected to one other neuron). However if weighted sum of the input + the bias is less than 0, it will cause the neuron to activate because its value will be equal the value of the weighted sum of the input + the bias (this assumes that this neuron is only connected to one other neuron). You can read more about activation functions [here](https://medium.com/the-theory-of-everything/understanding-activation-functions-in-neural-networks-9491262884e0). Relu is usually the go-to activation function as it preforms well and is quick.
+* A dense layer is just a layer of neurons that [receives input from the neurons which are before it](https://cdn-images-1.medium.com/max/1200/1*eJ36Jpf-DE9q5nKk67xT0Q.jpeg). The first dense layer here will receive input from the features we made earlier and output it to the next. The second layer will receive input from the 1st layer and do the same, and so and and so forth. The reason why there are 5 layers here instead of 1 is because we have many complex features (200 spectra) that all have unique and complicated interactions with each other. Generally speaking, the more complicated the interaction between features the more layers you will have. 
+* 128 neurons were chosen for this example just because they gave me the best results from the start, I'm sure a different number will be chosen once I have optimized this model.
+* An activation function of ‘relu’ stands for rectified linear unit. It kind of looks [like this] (https://cdn-images-1.medium.com/max/1200/1*oePAhrm74RNnNEolprmTaQ.png). Generally speaking this is how it works, if the weighted sum of the input + the bias is less than 0, the neuron will not activate because its value will equal to 0 (this assumes that this neuron is only connected to one other neuron). However if weighted sum of the input + the bias is less than 0, it will cause the neuron to activate because its value will be equal the value of the weighted sum of the input + the bias (this assumes that this neuron is only connected to one other neuron). You can read more about activation functions [here](https://medium.com/the-theory-of-everything/understanding-activation-functions-in-neural-networks-9491262884e0). Relu is usually the go-to activation function as it preforms well and is quick.
+
+```python
+model.add(tf.keras.layers.Dropout(0.5))
+```
+* This is a dropout layer. The basic idea behind a dropout layer is to remove a set amount of neurons from the NN algorithm during every epoch. It is typically used when a NN is has [overfiting](https://en.wikipedia.org/wiki/Overfitting) issues. After each run 0.5 or 50% of the neurons will be *randomly* removed from the NN. In this example it is not necessary to use one, however I noticed some slight overfitting problems. I will further explain when I talk about optimizing the model.
 
 ```python
 model.add(tf.keras.layers.Dense(17, activation=tf.nn.softmax))  # our output layer. 17 units for 17 classes. Softmax for probability distribution
@@ -426,23 +431,23 @@ model.compile(optimizer=Adam(lr=0.0015),  # Good default optimizer to start with
               metrics=['accuracy'])  # what to track
 ```
 * Now that we have made all of the necessary layers of our model, we have to compile the model. 
-* The model includes an optimizer which is set to 'Adam'. Remember in the video you watched earlier how it said that everytime the algorithm goes through the NN, the algorithm will go back and adjusts the weights of the connections between neurons so that we can minimize loss? That's what the optimizer does. 'Adam' is just the go-to optimizer in most basic NN, however if you wan't to explore other optimizers [click here](https://www.tensorflow.org/api_docs/python/tf/train/Optimizer).
+* The model includes an optimizer which is set to 'Adam'. Remember in the video you watched earlier how it said that every time the algorithm goes through the NN, the algorithm will go back and adjusts the weights of the connections between neurons so that we can minimize loss? That's what the optimizer does. 'Adam' is just the go-to optimizer in most basic NN, however if you want to explore other optimizers [click here](https://www.tensorflow.org/api_docs/python/tf/train/Optimizer).
     * lr is the learning rate. Change the values to change how fast the NN learns.
 * Loss measures how 'good' our model is. It is what we are trying to minimize. 'Sparse_categorical_crossentropy' refers to the type of loss function we will be using. There are other functions you can explore by [clicking here](https://www.tensorflow.org/api_docs/python/tf/losses).
 * Metrics just refers to what we want to track as the model is running. In this case we are monitoring accuracy. If you wish to track more things [click here](https://www.tensorflow.org/api_docs/python/tf/metrics).
 
 ```python
 model.fit(data, labels,
-                  epochs=10,
+                  epochs=100,
                   batch_size=32,
                   validation_split=0.1,
-                  callbacks=[EarlyStopping(patience=3),])  # train the model
+                  callbacks=[EarlyStopping(patience=5),])  # train the model
 ```
 * Now we are training the model on our data.
-* 'Epochs' refers to the number of times we want our NN to go through the data and optimize. In this case it will do so 10 times.
+* 'Epochs' refers to the number of times we want our NN to go through the data and optimize. In this case it will do so 100 times.
 * 'Batch_size' refers to the number of data points that will be fed into the NN algorithm at a time. In this case 32 data points are put in at a time.
 * 'Validation_split' refers to the percentage of the training data that will be placed aside to be tested on. This is equivalent to the scikit learn function ```Data_train, Data_test, Labels_train, Labels_test = train_test_split(data, labels, test_size=0.33)```. In this case we will leave 10% of the data to test on.
-* 'Callbacks' are just functions that will be excuted during the training process. In this case we are running the function 'EarlyStopping' with a patience value of 3. This fuction will stop the NN from running once it notices that training does not improve the function. It will tolerate only 3 epochs of where the NN does not improve (in terms of loss). There are more callback functions that you can read about by [clicking here](https://keras.io/callbacks/). 
+* 'Callbacks' are just functions that will be excuted during the training process. In this case we are running the function 'EarlyStopping' with a patience value of 5. This fuction will stop the NN from running once it notices that training does not improve the function. It will tolerate only 5 epochs of where the NN does not improve (in terms of loss). There are more callback functions that you can read about by [clicking here](https://keras.io/callbacks/). 
 
 # Tensorflow: Note of caution
 The code that I have made is very basic and has obvious flaws. It was written just so you can understanding the basics behind the structure of a neural network. A better version of the code will be made during my optimization tutorial.
@@ -452,8 +457,8 @@ The code that I have made is very basic and has obvious flaws. It was written ju
 * Go back to iPython, TYPE ```run tf_tut.py``` and hit ENTER.
 * You should see something that looks like this ![](/images/tf.png?raw=true "TF Results")
 * Here we can see the training loss, training accuracy, validation loss, and validation accuracy for each epoch
-* Depending on the validation split, you will see different results, your epochs might stop at 4, and you might get different accuracy values.
-* In my case, Tensorflow gave me better values than scikit learn, this might be different for you.
+* Depending on the validation split, you will see different results, your epochs might stop at 8, and you might get different accuracy values.
+* In my case, Tensorflow gave me better values than Scikit learn, this might be different for you.
 * You will notice that if you keep running the model, you will keep seeing different results, once again this is because of a low number of data and their uneven distribution between different categories.
 
 # Tensorflow Learn: Interpreting our results (Optional)
