@@ -495,6 +495,7 @@ Just for fun, here is a comparison between the true farm data against the KNN pr
 ![](/images/imshow3.png?raw=true "True map")
 ![](/images/SKL_prediction.png?raw=true "KNN Predicted map")
 ![](/images/TF_prediction.png?raw=true "TF Predicted map")
+
 Again look how close the TF map is to the true map, compared with the KNN map to the true map.
 
 
