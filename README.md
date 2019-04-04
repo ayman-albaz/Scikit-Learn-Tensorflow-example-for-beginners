@@ -455,7 +455,7 @@ The code that I have made is very basic and has obvious flaws. It was written ju
 
 # Tensorflow Learn: Testing
 * Go back to iPython, TYPE ```run tf_tut.py``` and hit ENTER.
-* You should see something that looks like this ![](/images/tf.png?raw=true "TF Results")
+* You should see something that looks like this ![](/images/tf2.png?raw=true "TF Results")
 * Here we can see the training loss, training accuracy, validation loss, and validation accuracy for each epoch
 * Depending on the validation split, you will see different results, your epochs might stop at 8, and you might get different accuracy values.
 * In my case, Tensorflow gave me better values than Scikit learn, this might be different for you.
