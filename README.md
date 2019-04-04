@@ -333,11 +333,12 @@ plt.show()
 This will give us a [confusion matrix](https://en.wikipedia.org/wiki/Confusion_matrix) that should something like this.
 ![](/images/SKL_prediction2.png?raw=true "KNN Confusion Matrix")
 Confusion matrices are useful for showing us the strengths and the weaknesses of our multi-categorical machine learning algorithm. True positives (correct predictions) are placed along the diagonal of the chart.  
-As we can see we have good accuracy for most types of crops, but there are some crops with low accuracy values and some with values of 0. This can be attributed to the following reasons
+As we can see we have good accuracy for most types of crops, but there are some crops with low accuracy values and some with values of 0. This can be attributed to the following reasons:
 * Small training size and/or size imbalances between categories (which I believe is the primary culprit)
-    * Just type ```np.unique(labels, return_counts=True)``` and you will see that labels with low sample number have the lowest accuracy values in the confusion matrix
+    * Just type ```np.unique(labels, return_counts=True)``` and you will see that labels with low sample number have the lowest accuracy values in the confusion matrix (categories 7 and 9 have 28 and 20 points respectively).
 * Similar categories
 * A truly random category
+* Weird farm plot
 * Algorithm just does not work for this type of category
 
 Just for fun, here is a comparison between the true farm data against the predicted farm data.
@@ -487,8 +488,16 @@ plt.show()
 ```
 This will give us a [confusion matrix](https://en.wikipedia.org/wiki/Confusion_matrix) that should something like this.
 ![](/images/TF_prediction2.png?raw=true "TF Confusion Matrix")
-Notice how these values are much better than the KNN confusion matrix? This is the power of NN. And this is with just some optimization being implemented (which I casually inserted into the code).
+Notice how these values are much better than the [KNN confusion matrix](https://raw.githubusercontent.com/professoractualfactual/Scikit-Learn-Tensorflow-example-for-beginners/master/images/SKL_prediction2.png)? This is the power of NN. And this is with just some optimization being implemented (which I casually inserted into the code).
 Please note if you get a row with only 0's in the heat map, just reload ```clean_data.py``` in order to get newly shuffled data. It could just be that all the data from one category ended up in the validation set (by pure chance).
+
+As we can see we have good accuracy for most types of crops, but there are some crops with low accuracy values and some with values of 0. This can be attributed to the following reasons:
+* Small training size and/or size imbalances between categories (which I believe is the primary culprit)
+    * Just type ```np.unique(labels, return_counts=True)``` and you will see that labels with low sample number have the lowest accuracy values in the confusion matrix (categories 7 and 9 have 28 and 20 points respectively).
+* Similar categories
+* A truly random category
+* Weird farm plot
+* Algorithm just does not work for this type of category
 
 Just for fun, here is a comparison between the true farm data against the KNN predicted farm data and the TF predicted farm data (in that order).
 
