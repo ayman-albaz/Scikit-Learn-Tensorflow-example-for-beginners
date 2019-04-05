@@ -35,7 +35,7 @@ array=normalize(confusion_matrix(Labels_test, knn.predict(Data_test)))
   
 df_cm = pd.DataFrame(array, range(17),
                   range(17))
-sn.set(font_scale=1.4)#for label size
+sn.set(font_scale=1.4)  #for label size
 sn.heatmap(df_cm, annot=True,annot_kws={"size": 10}, cmap='Greens')# font size
 plt.xlabel('Predicted label', fontsize=16)
 plt.ylabel('True label', fontsize=16)

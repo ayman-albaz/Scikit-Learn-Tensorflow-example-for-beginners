@@ -1,5 +1,6 @@
 from scipy.io import loadmat
 import numpy as np
+from random import shuffle
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import normalize
 
@@ -11,6 +12,11 @@ labels= loadmat('Indian_pines_gt.mat')['indian_pines_gt']
 features=features.reshape((-1,features.shape[2]))   
 labels= labels.reshape(-1)
 
+"""Shuffling the data and labels, while keeping their relative orders the same"""
+c=list(zip(features,labels))
+shuffle(c)
+features,labels=zip(*c)
+labels=np.array(labels)
 
 """Normalizing data. This will save us alot of processing time"""
 features=normalize(features)
@@ -25,3 +31,5 @@ print(f'Features used {len(pca.components_)}/{features.shape[1]}')
 for i, label in enumerate(labels):
     if label==0:
         data[i]=np.zeros((data.shape[1],))
+        
+        

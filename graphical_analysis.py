@@ -16,3 +16,4 @@ plt.show()
 plt.plot(features[0,:,:]) #200 spectra distribution along the first 145 pixels
 plt.show()
 
+
