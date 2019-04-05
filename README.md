@@ -509,6 +509,8 @@ Just for fun, here is a comparison between the true farm data against the KNN pr
 
 Again look how close the TF map is to the true map, compared with the KNN map to the true map.
 
+If you are pleased with your TF model and would like to use it again in the future, go to iPython, TYPE: ```model.save('spec_classifier.h5')``` and hit ENTER. To load it TYPE: ```model=tf.keras.models.load_model('spec_classifier.h5')```.
+
 
 # TF Learn: Optimization
 TF optimization is hard, and takes a lot of time to implement. Which is why it will be left for another day. Even the worlds top machine learning experts and TF users have a hard time implementing the optimum TF parameters. Also remember that there is no 'correct' algorithm optimization. A lot of TF optimization involves trial and error.
