@@ -490,7 +490,7 @@ plt.show()
 This will give us a [confusion matrix](https://en.wikipedia.org/wiki/Confusion_matrix) that should something like this.
 ![](/images/TF_prediction2.png?raw=true "TF Confusion Matrix")
 Notice how these values are much better than the [KNN confusion matrix](https://raw.githubusercontent.com/professoractualfactual/Scikit-Learn-Tensorflow-example-for-beginners/master/images/SKL_prediction2.png)? This is the power of NN. And this is with just some optimization being implemented (which I casually inserted into the code).
-Please note if you get a row with only 0's in the heat map, just reload ```clean_data.py``` in order to get newly shuffled data. It could just be that all the data from one category ended up in the validation set (by pure chance).
+Please note if you get a row with only 0's in the heat map, just reload ```clean_data.py``` in order to get newly shuffled data. It could just be that all the data from one category ended up in the training set (by pure chance).
 
 As we can see we have good accuracy for most types of crops, but there are some crops with low accuracy values and some with values of 0. This can be attributed to the following reasons:
 * Small training size and/or size imbalances between categories (which I believe is the primary culprit)
