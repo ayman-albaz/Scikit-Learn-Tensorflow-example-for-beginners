@@ -27,11 +27,11 @@ So our hypothesis is: We can use spectroscopic data from an AVRIS sensor to clas
 # Just what IS an array? Here's a good example!
 Imagine having one of those children’s books, except this book is 145mm by 145mm and is completely blank. This book also has 200 pages. You bring a bottle of really strong black ink and spill some of it on the first page of the book. You wipe of the ink but notice that your book is covered in ink. You also notice that the ink made its way though 199 papers and did not make it to the last page. 
 
-Now if you think of the book as an array (145 height, 145 width, 200 pages), and the darkness of the ink ranging from values of 0 (white) to 1 (black). The first page of the ink will have 145x145 pixels that all have the value of 1.
+Now if you think of the book as an array (145 height, 145 width, 200 pages), and the darkness of the ink ranging from values of 0 (black) to 1 (white). The first page of the ink will have 145x145 pixels that all have the value of 0.
 
-As you keep turning the pages you notice the values of the 145x145 pixels decreasing, making their way from 1 to 0.
+As you keep turning the pages you notice the values of the 145x145 pixels increasing, making their way from 0 to 1.
 
-The last page will have all 145x145 pixels with a value of 0, as the ink did not reach that page.
+The last page will have all 145x145 pixels with a value of 1, as the ink did not reach that page.
 
 
 
