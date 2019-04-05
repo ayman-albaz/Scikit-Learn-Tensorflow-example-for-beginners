@@ -338,6 +338,7 @@ As we can see we have good accuracy for most types of crops, but there are some 
     * Just type ```np.unique(labels, return_counts=True)``` and you will see that labels with low sample number have the lowest accuracy values in the confusion matrix (categories 7 and 9 have 28 and 20 points respectively).
 * Similar categories
 * A truly random category
+* Diseased farm plot
 * Weird farm plot
 * Algorithm just does not work for this type of category
 
@@ -497,6 +498,7 @@ As we can see we have good accuracy for most types of crops, but there are some 
 * Similar categories
 * A truly random category
 * Weird farm plot
+* Diseased farm plot
 * Algorithm just does not work for this type of category
 
 Just for fun, here is a comparison between the true farm data against the KNN predicted farm data and the TF predicted farm data (in that order).
@@ -513,3 +515,4 @@ TF optimization is hard, and takes a lot of time to implement. Which is why it w
 To get better at using TF I recommend to keep using TF on other problems as well as familiarizing yourself with the theory behind the algorithm (statistics, calculus, probability).
 
 # Closing Remarks
+Congratulations, you have completed your very first machine learning and Tensorflow tutorial. Please let me know what you think of this tutorial. Also, if you have found any mistakes in my code please let me know.
